@@ -18,6 +18,6 @@ public class Department {
 
     private Department parent;
 
-    private Boolean state;
+    private Boolean state = true;
 
 }

@@ -7,6 +7,12 @@
     <result column="resource" jdbcType="VARCHAR" property="resource" />
   </resultMap>
 
+  <!--  void deleteRolePermission(Long id); -->
+  <delete id="deleteRolePermission">
+    delete from role_permission where p_id = #{id}
+  </delete>
+
+
   <!-- List<String> queryPermissionByEid(Long eid); -->
   <select id="queryPermissionByEid" resultType="java.lang.String">
     select p.resource from permission p left join role_permission rp on p.id = rp.p_id
@@ -19,6 +25,10 @@
     <where>
       <if test="rid!=null">
         id in (select p_id from role_permission where r_id = #{rid})
+      </if>
+      <if test="keyWord!=null">
+        (sn like concat('%',#{keyWord},'%')) or
+        (resource like concat('%',#{keyWord},'%'))
       </if>
     </where>
   </sql>

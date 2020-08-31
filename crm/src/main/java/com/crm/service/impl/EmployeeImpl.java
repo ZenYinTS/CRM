@@ -81,4 +81,9 @@ public class EmployeeImpl implements IEmployeeService {
         employeeDao.updateState(id);
     }
 
+    @Override
+    public List<Employee> queryForDept(Long id) {
+        return employeeDao.queryForDept(id);
+    }
+
 }

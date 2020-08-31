@@ -2,10 +2,7 @@ package com.crm.service;
 
 import com.crm.domain.Permission;
 import com.crm.domain.PageResult;
-import com.crm.domain.Permission;
 import com.crm.query.PermissionQueryObject;
-import com.crm.query.QueryObject;
-
 import java.util.List;
 
 public interface IPermissionService {
@@ -22,4 +19,6 @@ public interface IPermissionService {
     PageResult queryForPage(PermissionQueryObject queryObject);
 
     List<String> queryPermissionByEid(Long eid);
+
+    void deleteRolePermission(Long id);
 }

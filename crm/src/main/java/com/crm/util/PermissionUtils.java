@@ -28,9 +28,8 @@ public class PermissionUtils {
             //如果权限表达式为空，就认为该菜单项不需要进行权限控制，如果不为空就进行权限控制
             if (StringUtils.isNotBlank(menu.getFunction())){
                 //查看用户是否具有该权限
-                List<Permission> userPermission = (List<Permission>) UserContext.get().getSession().getAttribute(UserContext.PERMISSIONINSESSION);
                 //不具有则删除
-                if (userPermission==null||!userPermission.contains(menu.getFunction())){
+                if (!checkPermission(menu.getFunction())){
                     menus.remove(i);
                 }
             }

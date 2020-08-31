@@ -6,11 +6,56 @@
     <result column="sn" jdbcType="VARCHAR" property="sn" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="state" jdbcType="BIT" property="state" />
+    <!-- 联合查询:返回单个记录，并加上前缀返回 -->
+    <association columnPrefix="m_" javaType="com.crm.domain.Employee" property="manager">
+      <id column="id" property="id" />
+      <result column="realname" property="realname" />
+      <result column="username" property="username" />
+    </association>
+    <association columnPrefix="p_" property="parent" javaType="com.crm.domain.Department">
+      <id column="id" property="id" />
+      <result column="name" property="name" />
+    </association>
   </resultMap>
+  <!-- 高级查询 -->
+  <sql id="where_sql">
+  <where>
+    <if test="keyWord!=null">
+      (d.name like concat('%',#{keyWord},'%')) or
+      (d.sn like concat('%',#{keyWord},'%'))
+    </if>
+  </where>
+  </sql>
+  <!-- Long getTotalForPage(DepartmentQueryObject queryObject); -->
+  <select id="getTotalForPage" resultType="java.lang.Long">
+    select COUNT(*) from department d
+    <include refid="where_sql" />
+  </select>
+
+  <!--  PageResult queryForPage(DepartmentQueryObject queryObject);-->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    SELECT d.id,d.sn,d.name,d.state,p.id AS p_id,p.name AS p_name,e.id AS m_id,e.realname AS m_realname,e.username AS m_username
+    FROM department d LEFT JOIN department p ON d.parent_id = p.id
+    LEFT JOIN employee e ON d.manager_id = e.id
+    <include refid="where_sql" />
+    <if test="page!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <!--  void updateState(Long id);-->
+  <update id="updateState">
+    update department set state = 0 where id = #{id}
+  </update>
 
   <!-- List&amp;lt;Department&amp;gt; queryForEmp(); -->
-  <select id="queryForEmp" resultType="com.crm.domain.Department">
-    select id,name from department;
+  <select id="queryForEmp" resultMap ="BaseResultMap">
+    select id,name from department where state = 0 and id != #{id}
+  </select>
+
+  <!-- List&amp;lt;Department&amp;gt; queryForDept(Long id); -->
+  <select id="queryForDept" resultMap ="BaseResultMap">
+    select id,name from department where state = 1   and id != #{id}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

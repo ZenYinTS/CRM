@@ -1,6 +1,8 @@
 package com.crm.mapper;
 
 import com.crm.domain.Department;
+import com.crm.domain.PageResult;
+import com.crm.query.DepartmentQueryObject;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +19,12 @@ public interface DepartmentMapper {
     int updateByPrimaryKey(Department record);
 
     List<Department> queryForEmp();
+
+    List<Department> queryForDept(Long id);
+
+    List<Department> queryForPage(DepartmentQueryObject queryObject);
+
+    void updateState(Long id);
+
+    Long getTotalForPage(DepartmentQueryObject queryObject);
 }

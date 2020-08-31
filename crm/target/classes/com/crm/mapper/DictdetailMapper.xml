@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.DictdetailMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Dictdetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="sn" jdbcType="VARCHAR" property="sn" />
+    <association property="parent" javaType="com.crm.domain.Dictcatalog" columnPrefix="c_">
+      <id column="id" property="id"/>
+      <result column="name" property="name"/>
+    </association>
+  </resultMap>
+
+
+  <!-- List<Dictdetail> selectByPid(Long pid); -->
+  <select id="selectByPid" resultMap="BaseResultMap">
+    SELECT d.*,c.id AS c_id,c.name AS c_name
+    FROM dictdetail d LEFT JOIN dictcatalog c ON d.parent_id = c.id
+    WHERE d.parent_id = #{pid}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from dictdetail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Dictdetail" useGeneratedKeys="true">
+    insert into dictdetail (parent_id, name, intro,sn
+      )
+    values (#{parent.id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR},#{sn,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Dictdetail">
+    update dictdetail
+    set parent_id = #{parent.id,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      intro = #{intro,jdbcType=VARCHAR},
+      sn = #{sn,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, parent_id, name, intro,sn
+    from dictdetail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, parent_id, name, intro
+    from dictdetail
+  </select>
+</mapper>

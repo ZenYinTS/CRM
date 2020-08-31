@@ -23,4 +23,5 @@ public interface IEmployeeService {
 
     void updateState(Long id);
 
+    List<Employee> queryForDept(Long id);
 }

@@ -56,4 +56,9 @@ public class PermissionImpl implements IPermissionService {
     public List<String> queryPermissionByEid(Long eid) {
         return permissionDao.queryPermissionByEid(eid);
     }
+
+    @Override
+    public void deleteRolePermission(Long id) {
+        permissionDao.deleteRolePermission(id);
+    }
 }

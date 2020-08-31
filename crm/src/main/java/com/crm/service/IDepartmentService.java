@@ -1,6 +1,8 @@
 package com.crm.service;
 
 import com.crm.domain.Department;
+import com.crm.domain.PageResult;
+import com.crm.query.DepartmentQueryObject;
 
 import java.util.List;
 
@@ -16,4 +18,10 @@ public interface IDepartmentService {
     int updateByPrimaryKey(Department record);
 
     List<Department> queryForEmp();
+
+    List<Department> queryForDept(Long id);
+
+    PageResult queryForPage(DepartmentQueryObject queryObject);
+
+    void updateState(Long id);
 }

@@ -24,4 +24,6 @@ public interface PermissionMapper {
     List<Permission> queryPage(QueryObject qo);
 
     List<String> queryPermissionByEid(Long eid);
+
+    void deleteRolePermission(Long id);
 }

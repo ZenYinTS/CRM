@@ -29,4 +29,6 @@ public interface EmployeeMapper {
     void insertRelation(@Param("eid") Long eid,@Param("rid") Long rid);
 
     void deleteRelation(Long eid);
+
+    List<Employee> queryForDept(Long id);
 }

@@ -27,10 +27,11 @@
     <div>
         关键字查询：<input type="text" name="keyWord">
         <a class="easyui-linkbutton" iconCls="icon-search" data-cmd="searchBtn">搜索</a>
+        <a class="easyui-linkbutton" href="emp_download">导出Excel</a>
     </div>
 </div>
 
-<!-- 新增/更新对话框 -->m
+<!-- 新增/更新对话框 -->
 <div id="emp_dialog">
     <form id="emp_form" method="post">
         <%--  隐含域，判断新增还是更新 --%>

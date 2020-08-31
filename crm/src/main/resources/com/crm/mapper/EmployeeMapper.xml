@@ -18,6 +18,11 @@
     </association>
   </resultMap>
 
+  <!-- List<Employee> queryForDept(Long id); -->
+  <select id="queryForDept" resultMap="BaseResultMap">
+    select id,username,realname from employee where dept_id = #{id} and state = 1
+  </select>
+
   <!-- void deleteRelation(Long eid); -->
   <delete id="deleteRelation">
     delete from emp_role where e_id = #{eid}

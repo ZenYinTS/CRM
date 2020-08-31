@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="myFn" uri="http://www.crm.com/crm/permission" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  %>
 <html>
 <head>
@@ -10,9 +12,11 @@
     <!-- 工具栏按钮 -->
     <div id="role_datagrid_tb">
         <div>
-            <a iconCls="icon-add" class="easyui-linkbutton" plain="true" data-cmd="add">新增</a>
-            <a iconCls="icon-edit" class="easyui-linkbutton" plain="true" data-cmd="edit">编辑</a>
-            <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="remove">删除</a>
+            <c:if test="${myFn:checkPermission('com.crm.web.controller.RoleController:ALL')}">
+                <a iconCls="icon-add" class="easyui-linkbutton" plain="true" data-cmd="add">新增</a>
+                <a iconCls="icon-edit" class="easyui-linkbutton" plain="true" data-cmd="edit">编辑</a>
+                <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="remove">删除</a>
+            </c:if>
             <a iconCls="icon-reload" class="easyui-linkbutton" plain="true" data-cmd="refresh">刷新</a>
         </div>
         <div>
