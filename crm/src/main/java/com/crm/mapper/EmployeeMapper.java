@@ -31,4 +31,6 @@ public interface EmployeeMapper {
     void deleteRelation(Long eid);
 
     List<Employee> queryForDept(Long id);
+
+    List<Employee> selectAllSells(Long inchargeId);
 }

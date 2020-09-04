@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.TransferMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Transfer">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="transTime" jdbcType="TIMESTAMP" property="transtime" />
+    <result column="transReason" jdbcType="VARCHAR" property="transreason" />
+    <association property="customer" javaType="com.crm.domain.Customer" columnPrefix="c_">
+      <id property="id" column="id"/>
+      <result column="name" property="name"/>
+    </association>
+    <association property="transuser" javaType="com.crm.domain.Employee" columnPrefix="trans_">
+      <id property="id" column="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+    <association property="oldseller" javaType="com.crm.domain.Employee" columnPrefix="oldsell_">
+      <id property="id" column="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+    <association property="newseller" javaType="com.crm.domain.Employee" columnPrefix="newsell_">
+      <id property="id" column="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+  </resultMap>
+
+
+  <!-- 高级查询 -->
+  <sql id="where_sql">
+    <where>
+      <if test="cname!=null and cname.length()>0">
+        (c.name like concat('%',#{cname},'%'))
+      </if>
+      <if test="startTime !=null">
+        and t.transTime >= #{startTime}
+      </if>
+      <if test="endTime !=null">
+        and t.transTime &lt;= #{endTime}
+      </if>
+    </where>
+  </sql>
+
+  <!--  Long queryPageCount(TransferQueryObject queryObject);-->
+  <select id="queryPageCount" resultType="java.lang.Long">
+    select COUNT(*) from transfer t LEFT JOIN customer c ON t.customer_id = c.id
+    <include refid="where_sql"></include>
+  </select>
+
+  <!--  List<Transfer> queryPage(TransferQueryObject queryObject);-->
+  <select id="queryPage" resultMap="BaseResultMap">
+    SELECT t.*,c.id AS c_id,c.name AS c_name,trans.id AS trans_id,trans.username AS trans_username,trans.realname AS trans_realname,
+    oldsell.id AS oldsell_id,oldsell.username AS oldsell_username,oldsell.realname AS oldsell_realname,
+    newsell.id AS newsell_id,newsell.username AS newsell_username,newsell.realname AS newsell_realname
+    FROM transfer t LEFT JOIN customer c ON t.customer_id = c.id
+    LEFT JOIN employee trans ON t.transUser_id = trans.id
+    LEFT JOIN employee oldsell ON t.oldseller_id = oldsell.id
+    LEFT JOIN employee newsell ON t.newseller_id = newsell.id
+    <include refid="where_sql"></include>
+    <if test="page != null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from transfer
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Transfer" useGeneratedKeys="true">
+    insert into transfer (customer_id, transUser_id, transTime, 
+      oldSeller_id, newSeller_id, transReason
+      )
+    values (#{customer.id,jdbcType=BIGINT}, #{transuser.id,jdbcType=BIGINT}, #{transtime,jdbcType=TIMESTAMP},
+      #{oldseller.id,jdbcType=BIGINT}, #{newseller.id,jdbcType=BIGINT}, #{transreason,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Transfer">
+    update transfer
+    set customer_id = #{customer.id,jdbcType=BIGINT},
+      transUser_id = #{transuser.id,jdbcType=BIGINT},
+      transTime = #{transtime,jdbcType=TIMESTAMP},
+      oldSeller_id = #{oldseller.id,jdbcType=BIGINT},
+      newSeller_id = #{newseller.id,jdbcType=BIGINT},
+      transReason = #{transreason,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, customer_id, transUser_id, transTime, oldSeller_id, newSeller_id, transReason
+    from transfer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, customer_id, transUser_id, transTime, oldSeller_id, newSeller_id, transReason
+    from transfer
+  </select>
+</mapper>

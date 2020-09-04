@@ -1,3 +1,4 @@
+<%@ page import="com.crm.util.UserContext" %>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="js/jquery-easyui-v1.9.0/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="js/jquery-easyui-v1.9.0/themes/icon.css" />

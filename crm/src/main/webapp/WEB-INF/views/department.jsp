@@ -47,7 +47,8 @@
                     <input id="cbManager" type="text" class="easyui-combobox" name="manager.id" data-options="
                     valueField: 'id',
                     textField: 'username',
-	                 url:'emp_queryForDept'
+	                 url:'emp_queryForDept',
+                    panelHeight:'auto'
                     "></td>
             </tr>
             <tr>
@@ -55,7 +56,8 @@
                 <td><input id="cbParent" type="text" class="easyui-combobox" name="parent.id" data-options="
                     valueField: 'id',
                     textField: 'name',
-                    url:'dept_queryForDept'
+                    url:'dept_queryForDept',
+                    panelHeight:'auto'
                     "></td>
             </tr>
         </table>

@@ -86,4 +86,9 @@ public class EmployeeImpl implements IEmployeeService {
         return employeeDao.queryForDept(id);
     }
 
+    @Override
+    public List<Employee> selectAllSells(Long inchargeId) {
+        return employeeDao.selectAllSells(inchargeId);
+    }
+
 }

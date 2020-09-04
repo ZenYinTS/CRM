@@ -18,6 +18,13 @@
     </association>
   </resultMap>
 
+  <!-- List<Employee> selectAllSells(Long inchargeId); -->
+  <select id="selectAllSells" resultMap="BaseResultMap">
+    select * from employee where id != #{inchargeId} and id in (select e_id from emp_role
+        where r_id in (select id from role where name = '市场专员')
+    )
+  </select>
+
   <!-- List<Employee> queryForDept(Long id); -->
   <select id="queryForDept" resultMap="BaseResultMap">
     select id,username,realname from employee where dept_id = #{id} and state = 1
@@ -101,5 +108,6 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, username, realname, password, tel, email, dept_id, inputTime, state, admin
     from employee
+    where state = 1
   </select>
 </mapper>

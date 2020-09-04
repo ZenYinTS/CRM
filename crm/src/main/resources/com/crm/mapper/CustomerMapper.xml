@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Customer">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="inputTime" jdbcType="TIMESTAMP" property="inputtime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="formalTime" jdbcType="TIMESTAMP" property="formaltime" />
+    <association property="job" javaType="com.crm.domain.Dictdetail">
+      <id column="jobId" property="id"/>
+      <result column="jobName" property="name"/>
+    </association>
+    <association property="salarylevel" javaType="com.crm.domain.Dictdetail">
+      <id column="levelId" property="id"/>
+      <result column="levelName" property="name"/>
+    </association>
+    <association property="customersource" javaType="com.crm.domain.Dictdetail">
+      <id column="sourceId" property="id"/>
+      <result column="sourceName" property="name"/>
+    </association>
+    <association property="inchargeuser" javaType="com.crm.domain.Employee">
+      <id column="eChargeId" property="id"/>
+      <result column="eChargeUsername" property="username"/>
+      <result column="eChargeRealname" property="realname"/>
+    </association>
+    <association property="inputuser" javaType="com.crm.domain.Employee">
+      <id column="eInputId" property="id"/>
+      <result column="eInputUsername" property="username"/>
+      <result column="eInputRealname" property="realname"/>
+    </association>
+  </resultMap>
+
+  <!-- 高级查询 -->
+  <sql id="where_sql">
+    <where>
+       c.inchargeUser_id = #{userId}
+      <if test="keyWord!=null">
+        and (c.name like concat('%',#{keyWord},'%')) or
+        (c.tel like concat('%',#{keyWord},'%'))
+      </if>
+      <if test="status != -3 and status != null">
+        and c.status = #{status}
+      </if>
+      <if test="status == null">
+        and c.status = 0
+      </if>
+    </where>
+  </sql>
+  <!-- int updateStatus(Long id, int i); -->
+  <update id="updateStatus">
+    update customer set status = #{i} where id = #{id}
+  </update>
+
+  <!-- Long getTotalForPage(CustomerQueryObject queryObject); -->
+  <select id="getTotalForPage" resultType="java.lang.Long">
+    select COUNT(*) from customer c
+    <include refid="where_sql"></include>
+  </select>
+
+  <!-- List queryForPage(CustomerQueryObject queryObject); -->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    SELECT c.*,dtJob.id AS jobId,dtJob.name AS jobName,dtLevel.id AS levelId,
+	dtLevel.name AS levelName,dtSource.id AS sourceId,dtSource.name AS sourceName,
+	eCharge.id AS eChargeId,eCharge.username AS eChargeUsername,eCharge.realname AS eChargeRealname,
+	eInput.id AS eInputId,eInput.username AS eInputUsername,eInput.realname AS eInputRealname
+    FROM customer c LEFT JOIN dictdetail dtJob ON dtJob.id = c.job_id
+    LEFT JOIN dictdetail dtLevel ON dtLevel.id = c.salaryLevel_id
+    LEFT JOIN dictdetail dtSource ON dtSource.id = c.customerSource_id
+    LEFT JOIN employee eCharge ON eCharge.id = c.inChargeUser_id
+    LEFT JOIN employee eInput ON eInput.id = c.inputUser_id
+    <include refid="where_sql"></include>
+    limit #{start},#{rows}
+  </select>
+
+  <!-- List<Dictdetail> jobQueryInDetail(); -->
+  <select id="jobQueryInDetail" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+		WHERE sn = 'job')
+  </select>
+
+  <!-- List<Dictdetail> salarylevelQueryInDetail(); -->
+  <select id="salarylevelQueryInDetail" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+		WHERE sn = 'salaryLevel')
+  </select>
+
+  <!-- List<Dictdetail> customersourceQueryInDetail(); -->
+  <select id="customersourceQueryInDetail" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+		WHERE sn = 'customerSource')
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from customer
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Customer" useGeneratedKeys="true">
+    insert into customer (name, age, gender, 
+      tel, email, qq, wechat, 
+      job_id, salaryLevel_id, customerSource_id, 
+      inChargeUser_id, inputUser_id, inputTime, 
+      status, formalTime)
+    values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{gender,jdbcType=INTEGER},
+      #{tel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, 
+      #{job.id,jdbcType=BIGINT}, #{salarylevel.id,jdbcType=BIGINT}, #{customersource.id,jdbcType=BIGINT},
+      #{inchargeuser.id,jdbcType=BIGINT}, #{inputuser.id,jdbcType=BIGINT}, #{inputtime,jdbcType=TIMESTAMP},
+      #{status,jdbcType=INTEGER}, #{formaltime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Customer">
+    update customer
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null">
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="tel != null">
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null">
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null">
+        job_id = #{job.id,jdbcType=BIGINT},
+      </if>
+      <if test="salarylevel != null">
+        salaryLevel_id = #{salarylevel.id,jdbcType=BIGINT},
+      </if>
+      <if test="customersource != null">
+        customerSource_id = #{customersource.id,jdbcType=BIGINT},
+      </if>
+      <if test="inchargeuser != null">
+        inChargeUser_id = #{inchargeuser.id,jdbcType=BIGINT},
+      </if>
+      <if test="inputuser != null">
+        inputUser_id = #{inputuser.id,jdbcType=BIGINT},
+      </if>
+      <if test="inputtime != null">
+        inputTime = #{inputtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="formaltime != null">
+        formalTime = #{formaltime,jdbcType=TIMESTAMP}
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, name, age, gender, tel, email, qq, wechat, job_id, salaryLevel_id, customerSource_id,
+    inChargeUser_id, inputUser_id, inputTime, status, formalTime
+    from customer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, age, gender, tel, email, qq, wechat, job_id, salaryLevel_id, customerSource_id,
+    inChargeUser_id, inputUser_id, inputTime, status, formalTime
+    from customer
+  </select>
+</mapper>

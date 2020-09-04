@@ -99,12 +99,23 @@
 <!--            <property name="constructorBased" value="false" />-->
 <!--            <generatedKey column="id" sqlStatement="JDBC" />-->
 <!--        </table>-->
-        <table tableName="dictcatalog">
-            <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
-            <property name="constructorBased" value="false" />
-            <generatedKey column="id" sqlStatement="JDBC" />
-        </table>
-        <table tableName="dictdetail">
+<!--        <table tableName="dictcatalog">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+<!--        <table tableName="dictdetail">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+
+<!--        <table tableName="customer">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+        <table tableName="transfer">
             <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
             <property name="constructorBased" value="false" />
             <generatedKey column="id" sqlStatement="JDBC" />

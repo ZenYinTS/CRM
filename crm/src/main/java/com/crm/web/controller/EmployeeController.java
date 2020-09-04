@@ -44,6 +44,19 @@ public class EmployeeController {
     }
 
     @ResponseBody
+    @RequestMapping("/emp_all")
+    public List<Employee> listAll(){
+        return employeeService.selectAll();
+    }
+
+    @ResponseBody
+    @RequestMapping("/sell_all")
+    public List<Employee> listAllSells(Long inchargeId){
+        List<Employee> employees= employeeService.selectAllSells(inchargeId);
+        return employees;
+    }
+
+    @ResponseBody
     @RequestMapping(value="/employee_list")
     public PageResult employeeList(EmployeeQueryObject queryObject){
         PageResult result = null;

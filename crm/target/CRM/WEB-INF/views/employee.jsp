@@ -71,7 +71,8 @@
                     valueField: 'id',
                     textField: 'name',
                     url:'roles_queryForEmp',
-                    multiple:true
+                    multiple:true,
+                    panelHeight:'auto'
                     "></td>
             </tr>
         </table>
