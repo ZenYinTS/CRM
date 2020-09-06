@@ -41,9 +41,12 @@
   <sql id="where_sql">
     <where>
        c.inchargeUser_id = #{userId}
-      <if test="keyWord!=null">
+      <if test="keyWord!=null and keyWord.length()!=0">
         and (c.name like concat('%',#{keyWord},'%')) or
         (c.tel like concat('%',#{keyWord},'%'))
+      </if>
+      <if test="status == -3">
+        and (c.status = 0 or c.status = -1)
       </if>
       <if test="status != -3 and status != null">
         and c.status = #{status}

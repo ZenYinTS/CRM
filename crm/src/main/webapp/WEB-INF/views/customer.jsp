@@ -39,7 +39,8 @@
     </div>
     <div>
         关键字查询：<input type="text" name="keyWord">
-        <select class="easyui-combobox" name="status" style="width:100px;" data-options="panelHeight:'auto'">
+        <input type="hidden" name="userId" value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getId()%>">
+        <select id="sl_status" class="easyui-combobox" name="status" style="width:100px;" data-options="panelHeight:'auto'">
             <option value="-3">全部</option>
             <option value="0">潜在客户</option>
             <option value="-1">开发失败</option>

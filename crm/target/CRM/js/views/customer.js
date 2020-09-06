@@ -4,13 +4,15 @@
     //3. 统一处理按钮监听
     var customerDatagrid , customerFailed , customerDialog , customerForm , customerFormId ,
         customerKeyWord,clearField,inputTime,handOverDialog,cNameInput,inchargeNameInput,
-        inchargeUserInput,handOverForm;
+        inchargeUserInput,handOverForm,customerStatus,customerUserId;
     customerDatagrid = $("#customer_datagrid");
     customerFailed = $("[iconCls='icon-edit'],[iconCls='icon-remove'],[iconCls='icon-tip'],[iconCls='icon-remove'],#formalBtn");
     customerDialog = $("#customer_dialog");
     customerForm = $("#customer_form");
     customerFormId = $("#customer_form [name='id']");
     customerKeyWord = $("[name='keyWord']");
+    customerStatus = $("#sl_status");
+    customerUserId = $("[name='userId']");
     clearField = $("[name='name'],[name='age'],[name='gender'],[name='tel'],[name='email'],[name='qq'],[name='wechat'],[name='job.id'],[name='salarylevel.id'],[name='customersource.id']");
     inputTime = $("[name = 'inputtime']");
     handOverDialog = $("#customer_handOver_dialog");
@@ -289,8 +291,12 @@
 
         searchBtn:function () {
             var value = customerKeyWord.val();
+            var status = customerStatus.val();
+            var userId = customerUserId.val();
             customerDatagrid.datagrid("load",{
-                keyWord:value
+                keyWord:value,
+                status:status,
+                userId:userId
             })
         }
     };
