@@ -40,7 +40,9 @@
   <!-- 高级查询 -->
   <sql id="where_sql">
     <where>
-       c.inchargeUser_id = #{userId}
+        <if test="isSE == false">
+        c.inchargeUser_id = #{userId}
+        </if>
       <if test="keyWord!=null and keyWord.length()!=0">
         and (c.name like concat('%',#{keyWord},'%')) or
         (c.tel like concat('%',#{keyWord},'%'))
@@ -48,13 +50,11 @@
       <if test="status == -3">
         and (c.status = 0 or c.status = -1)
       </if>
-      <if test="status != -3 and status != null">
+      <if test="status != -3">
         and c.status = #{status}
       </if>
-      <if test="status == null">
-        and c.status = 0
-      </if>
     </where>
+      order by c.inputTime desc
   </sql>
   <!-- int updateStatus(Long id, int i); -->
   <update id="updateStatus">

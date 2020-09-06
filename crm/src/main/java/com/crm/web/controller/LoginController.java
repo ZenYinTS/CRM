@@ -3,9 +3,11 @@ package com.crm.web.controller;
 import com.crm.domain.Employee;
 import com.crm.domain.Menu;
 import com.crm.domain.Permission;
+import com.crm.domain.Role;
 import com.crm.service.IEmployeeService;
 import com.crm.service.IMenuService;
 import com.crm.service.IPermissionService;
+import com.crm.service.IRoleService;
 import com.crm.util.AjaxResult;
 import com.crm.util.PermissionUtils;
 import com.crm.util.UserContext;
@@ -32,6 +34,9 @@ public class LoginController {
     @Autowired
     private IMenuService menuService;
 
+    @Autowired
+    private IRoleService roleService;
+
     @ResponseBody
     @RequestMapping(value="/login")
     public AjaxResult login(String username, String password,
@@ -56,6 +61,11 @@ public class LoginController {
                 List<String> userPermission = permissionService.queryPermissionByEid(employee.getId());
                 //存入session中
                 request.getSession().setAttribute(UserContext.PERMISSIONINSESSION, userPermission);
+
+                //获取用户角色集合，存入session中
+                List<Role> userRoles = roleService.getRolesByEid(employee.getId());
+                //存入session中
+                request.getSession().setAttribute(UserContext.ROLEINSESSION, userRoles);
 
                 //从数据库中获取菜单信息，并存入session中
                 List<Menu> menus = menuService.queryForRoot();

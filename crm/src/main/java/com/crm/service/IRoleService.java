@@ -20,4 +20,6 @@ public interface IRoleService {
     PageResult queryForPage(RoleQueryObject queryObject);
 
     List<Long> queryByEid(Long eid);
+
+    List<Role> getRolesByEid(Long id);
 }

@@ -7,9 +7,14 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
 
+  <!-- List<Role> getRolesByEid(Long id); -->
+  <select id="getRolesByEid" resultMap="BaseResultMap">
+    select * from role where id in (select r_id from emp_role where e_id = #{id})
+  </select>
+
   <!-- List<Long> queryByEid(Long eid) -->
   <select id="queryByEid" resultType="java.lang.Long">
-    select id from role where id in (select r_id from emp_role where e_id = #{eid})
+    select r_id from emp_role where e_id = #{eid}
   </select>
 
   <!-- void deletePermissionByRid(Long rid); -->

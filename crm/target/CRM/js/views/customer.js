@@ -292,11 +292,9 @@
         searchBtn:function () {
             var value = customerKeyWord.val();
             var status = customerStatus.val();
-            var userId = customerUserId.val();
             customerDatagrid.datagrid("load",{
                 keyWord:value,
-                status:status,
-                userId:userId
+                status:status
             })
         }
     };

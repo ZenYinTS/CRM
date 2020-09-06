@@ -3,17 +3,14 @@ package com.crm.web.controller;
 import com.crm.domain.*;
 import com.crm.query.CustomerQueryObject;
 import com.crm.service.ICustomerService;
-import com.crm.service.IEmployeeService;
 import com.crm.service.ITransferService;
 import com.crm.util.AjaxResult;
 import com.crm.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -22,9 +19,6 @@ public class CustomerController {
 
     @Autowired
     private ICustomerService customerService;
-
-    @Autowired
-    private IEmployeeService employeeService;
 
     @Autowired
     private ITransferService transferService;
@@ -43,9 +37,25 @@ public class CustomerController {
     @ResponseBody
     @RequestMapping("/customer_list")
     public PageResult queryForPage(CustomerQueryObject queryObject){
+        Employee e = (Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION);
+        if (queryObject.getUserId() == null) {
+            queryObject.setUserId(e.getId());
+        }
+        if (queryObject.getStatus()  == null){
+            queryObject.setStatus(0);
+        }
+        queryObject.setIsSE(isSE(e));
         return customerService.queryForPage(queryObject);
     }
 
+    private Boolean isSE(Employee e){
+        List<Role> userRoles = (List<Role>) UserContext.get().getSession().getAttribute(UserContext.ROLEINSESSION);
+        for (Role r : userRoles) {
+            if ("SE".equals(r.getSn()))
+                return true;
+        }
+        return false;
+    }
     @ResponseBody
     @RequestMapping("/customer_save")
     public AjaxResult save(Customer customer){

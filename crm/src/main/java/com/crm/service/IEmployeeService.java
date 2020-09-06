@@ -2,6 +2,7 @@ package com.crm.service;
 
 import com.crm.domain.Employee;
 import com.crm.domain.PageResult;
+import com.crm.domain.Role;
 import com.crm.query.EmployeeQueryObject;
 
 import java.util.List;
@@ -26,4 +27,5 @@ public interface IEmployeeService {
     List<Employee> queryForDept(Long id);
 
     List<Employee> selectAllSells(Long inchargeId);
+
 }

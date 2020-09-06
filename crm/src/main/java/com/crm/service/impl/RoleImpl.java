@@ -63,6 +63,11 @@ public class RoleImpl implements IRoleService {
     }
 
     @Override
+    public List<Role> getRolesByEid(Long id) {
+        return roleDao.getRolesByEid(id);
+    }
+
+    @Override
     public PageResult queryForPage(RoleQueryObject queryObject) {
         Long count = roleDao.queryPageCount(queryObject);
         if (count == 0)

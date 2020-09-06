@@ -1,6 +1,7 @@
 <%@ page import="com.crm.domain.Employee" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="com.crm.service.IEmployeeService" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="myFn" uri="http://www.crm.com/crm/permission" %>
@@ -39,7 +40,6 @@
     </div>
     <div>
         关键字查询：<input type="text" name="keyWord">
-        <input type="hidden" name="userId" value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getId()%>">
         <select id="sl_status" class="easyui-combobox" name="status" style="width:100px;" data-options="panelHeight:'auto'">
             <option value="-3">全部</option>
             <option value="0">潜在客户</option>

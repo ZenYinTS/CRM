@@ -1,6 +1,7 @@
 package com.crm.mapper;
 
 import com.crm.domain.Employee;
+import com.crm.domain.Role;
 import com.crm.query.EmployeeQueryObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
