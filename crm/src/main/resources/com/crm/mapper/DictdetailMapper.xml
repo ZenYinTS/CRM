@@ -12,6 +12,32 @@
     </association>
   </resultMap>
 
+  <!-- List<Dictdetail> listPlanType(); -->
+  <select id="listPlanType" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+			WHERE NAME = '计划实施方式')
+  </select>
+  <!-- List<Dictdetail> jobQueryInDetail(); -->
+  <select id="jobQueryInDetail" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+		WHERE sn = 'job')
+  </select>
+
+  <!-- List<Dictdetail> salarylevelQueryInDetail(); -->
+  <select id="salarylevelQueryInDetail" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+		WHERE sn = 'salaryLevel')
+  </select>
+
+  <!-- List<Dictdetail> customersourceQueryInDetail(); -->
+  <select id="customersourceQueryInDetail" resultMap="BaseResultMap">
+    SELECT * FROM dictdetail
+    WHERE parent_id = (SELECT id FROM dictcatalog
+		WHERE sn = 'customerSource')
+  </select>
 
   <!-- List<Dictdetail> selectByPid(Long pid); -->
   <select id="selectByPid" resultMap="BaseResultMap">

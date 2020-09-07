@@ -19,4 +19,12 @@ public interface DictdetailMapper {
     int updateByPrimaryKey(Dictdetail record);
 
     List<Dictdetail> selectByPid(Long pid);
+
+    List<Dictdetail> jobQueryInDetail();
+
+    List<Dictdetail> salarylevelQueryInDetail();
+
+    List<Dictdetail> customersourceQueryInDetail();
+
+    List<Dictdetail> listPlanType();
 }

@@ -13,6 +13,7 @@
 
 </head>
 <body>
+<input type="hidden" id="type" value="${type}">
 <table id="customer_datagrid"></table>
 <!-- 工具栏按钮 -->
 <div id="customer_datagrid_tb">
@@ -24,26 +25,43 @@
         <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:update')}">
             <a iconCls="icon-edit" class="easyui-linkbutton" plain="true" data-cmd="edit">编辑</a>
         </c:if>
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:move') && 'formal'.equals(type)}">
+            <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="move">移入资源池</a>
+        </c:if>
         <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:share')}">
             <a iconCls="icon-tip" class="easyui-linkbutton" plain="true" data-cmd="share">共享</a>
         </c:if>
         <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:handOver')}">
             <a iconCls="icon-tip" class="easyui-linkbutton" plain="true" data-cmd="handOver">移交</a>
         </c:if>
-        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:remove')}">
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:remove') && 'potential'.equals(type)}">
             <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="remove">开发失败</a>
         </c:if>
-        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:formal')}">
+            <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:lose') && 'formal'.equals(type)}">
+                <a iconCls="icon-cancel" class="easyui-linkbutton" plain="true" data-cmd="lose">流失</a>
+            </c:if>
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:formal') && 'potential'.equals(type)}">
             <a id="formalBtn" iconCls="icon-add" class="easyui-linkbutton" plain="true" data-cmd="formal">转正</a>
         </c:if>
-            <a iconCls="icon-reload" class="easyui-linkbutton" plain="true" data-cmd="refresh">刷新</a>
+        <a iconCls="icon-reload" class="easyui-linkbutton" plain="true" data-cmd="refresh">刷新</a>
+            <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:output') && 'formal'.equals(type)}">
+                <a iconCls="icon-redo" class="easyui-linkbutton" plain="true" href="${ctp}/customer_output">导出用户</a>
+            </c:if>
     </div>
     <div>
         关键字查询：<input type="text" name="keyWord">
-        <select id="sl_status" class="easyui-combobox" name="status" style="width:100px;" data-options="panelHeight:'auto'">
-            <option value="-3">全部</option>
-            <option value="0">潜在客户</option>
-            <option value="-1">开发失败</option>
+        <select id="sl_status" class="easyui-combobox" name="status" style="width:100px;"
+                data-options="panelHeight:'auto'">
+            <c:if test="${'potential'.equals(type)}">
+                <option value="-3">全部</option>
+                <option value="0">潜在客户</option>
+                <option value="-1">开发失败</option>
+            </c:if>
+            <c:if test="${'formal'.equals(type)}">
+                <option value="-4">全部</option>
+                <option value="1">正式客户</option>
+                <option value="-2">流失客户</option>
+            </c:if>
         </select>
         <a class="easyui-linkbutton" iconCls="icon-search" data-cmd="searchBtn">搜索</a>
     </div>
@@ -129,20 +147,24 @@
             <tr>
                 <td>负责人</td>
                 <td>
-                    <input type="text" disabled value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getUsername()%>"/>
+                    <input type="text" disabled
+                           value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getUsername()%>"/>
                 </td>
             </tr>
             <tr>
                 <td>创建人</td>
                 <td>
-                    <input type="hidden" name="inputsuer.id" value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getId()%>"/>
-                    <input type="text" disabled value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getUsername()%>"/>
+                    <input type="hidden" name="inputsuer.id"
+                           value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getId()%>"/>
+                    <input type="text" disabled
+                           value="<%= ((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getUsername()%>"/>
                 </td>
             </tr>
             <tr>
                 <td>创建日期</td>
                 <td>
-                    <input type="text" name="inputtime" value="<%= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())%>" disabled/>
+                    <input type="text" name="inputtime"
+                           value="<%= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())%>" disabled/>
                 </td>
             </tr>
         </table>

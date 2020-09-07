@@ -50,12 +50,30 @@
       <if test="status == -3">
         and (c.status = 0 or c.status = -1)
       </if>
-      <if test="status != -3">
+      <if test="status == -4">
+        and (c.status = 1 or c.status = -2)
+      </if>
+      <if test="status != -3 and status != -4">
         and c.status = #{status}
       </if>
     </where>
       order by c.inputTime desc
   </sql>
+
+  <!-- List<Customer> selectAllFormal(); -->
+  <select id="selectAllFormal" resultMap="BaseResultMap">
+    SELECT c.*,dtJob.id AS jobId,dtJob.name AS jobName,dtLevel.id AS levelId,
+	dtLevel.name AS levelName,dtSource.id AS sourceId,dtSource.name AS sourceName,
+	eCharge.id AS eChargeId,eCharge.username AS eChargeUsername,eCharge.realname AS eChargeRealname,
+	eInput.id AS eInputId,eInput.username AS eInputUsername,eInput.realname AS eInputRealname
+    FROM customer c LEFT JOIN dictdetail dtJob ON dtJob.id = c.job_id
+    LEFT JOIN dictdetail dtLevel ON dtLevel.id = c.salaryLevel_id
+    LEFT JOIN dictdetail dtSource ON dtSource.id = c.customerSource_id
+    LEFT JOIN employee eCharge ON eCharge.id = c.inChargeUser_id
+    LEFT JOIN employee eInput ON eInput.id = c.inputUser_id
+    where status = 1
+  </select>
+
   <!-- int updateStatus(Long id, int i); -->
   <update id="updateStatus">
     update customer set status = #{i} where id = #{id}
@@ -79,28 +97,9 @@
     LEFT JOIN employee eCharge ON eCharge.id = c.inChargeUser_id
     LEFT JOIN employee eInput ON eInput.id = c.inputUser_id
     <include refid="where_sql"></include>
-    limit #{start},#{rows}
-  </select>
-
-  <!-- List<Dictdetail> jobQueryInDetail(); -->
-  <select id="jobQueryInDetail" resultMap="BaseResultMap">
-    SELECT * FROM dictdetail
-    WHERE parent_id = (SELECT id FROM dictcatalog
-		WHERE sn = 'job')
-  </select>
-
-  <!-- List<Dictdetail> salarylevelQueryInDetail(); -->
-  <select id="salarylevelQueryInDetail" resultMap="BaseResultMap">
-    SELECT * FROM dictdetail
-    WHERE parent_id = (SELECT id FROM dictcatalog
-		WHERE sn = 'salaryLevel')
-  </select>
-
-  <!-- List<Dictdetail> customersourceQueryInDetail(); -->
-  <select id="customersourceQueryInDetail" resultMap="BaseResultMap">
-    SELECT * FROM dictdetail
-    WHERE parent_id = (SELECT id FROM dictcatalog
-		WHERE sn = 'customerSource')
+    <if test="page != null">
+      limit #{start},#{rows}
+    </if>
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">

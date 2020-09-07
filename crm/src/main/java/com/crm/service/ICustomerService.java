@@ -19,13 +19,11 @@ public interface ICustomerService {
 
     int updateByPrimaryKey(Customer record);
 
-    List<Dictdetail> jobQueryInDetail();
-
-    List<Dictdetail> salarylevelQueryInDetail();
-
-    List<Dictdetail> customersourceQueryInDetail();
-
     PageResult queryForPage(CustomerQueryObject queryObject);
 
     int updateStatus(Long id, int i);
+
+    List<Customer> selectAllFormal();
+
+    List<Customer> queryForPageOnly(CustomerQueryObject queryObject);
 }

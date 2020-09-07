@@ -44,4 +44,24 @@ public class DictdetailImpl implements IDictdetailService {
     public List<Dictdetail> selectByPid(Long pid) {
         return dictdetailDao.selectByPid(pid);
     }
+
+    @Override
+    public List<Dictdetail> jobQueryInDetail() {
+        return dictdetailDao.jobQueryInDetail();
+    }
+
+    @Override
+    public List<Dictdetail> salarylevelQueryInDetail() {
+        return dictdetailDao.salarylevelQueryInDetail();
+    }
+
+    @Override
+    public List<Dictdetail> customersourceQueryInDetail() {
+        return dictdetailDao.customersourceQueryInDetail();
+    }
+
+    @Override
+    public List<Dictdetail> listPlanType() {
+        return dictdetailDao.listPlanType();
+    }
 }

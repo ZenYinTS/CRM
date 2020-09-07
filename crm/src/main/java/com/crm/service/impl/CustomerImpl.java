@@ -43,21 +43,6 @@ public class CustomerImpl implements ICustomerService {
     }
 
     @Override
-    public List<Dictdetail> jobQueryInDetail() {
-        return customerDao.jobQueryInDetail();
-    }
-
-    @Override
-    public List<Dictdetail> salarylevelQueryInDetail() {
-        return customerDao.salarylevelQueryInDetail();
-    }
-
-    @Override
-    public List<Dictdetail> customersourceQueryInDetail() {
-        return customerDao.customersourceQueryInDetail();
-    }
-
-    @Override
     public PageResult queryForPage(CustomerQueryObject queryObject) {
         //查询总的记录数
         Long total = customerDao.getTotalForPage(queryObject);
@@ -69,7 +54,17 @@ public class CustomerImpl implements ICustomerService {
     }
 
     @Override
+    public List<Customer> selectAllFormal() {
+        return customerDao.selectAllFormal();
+    }
+
+    @Override
     public int updateStatus(Long id, int i) {
         return customerDao.updateStatus(id,i);
+    }
+
+    @Override
+    public List<Customer> queryForPageOnly(CustomerQueryObject queryObject) {
+        return customerDao.queryForPage(queryObject);
     }
 }

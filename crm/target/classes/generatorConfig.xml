@@ -115,7 +115,13 @@
 <!--            <property name="constructorBased" value="false" />-->
 <!--            <generatedKey column="id" sqlStatement="JDBC" />-->
 <!--        </table>-->
-        <table tableName="transfer">
+<!--        <table tableName="transfer">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+
+        <table tableName="devplan">
             <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
             <property name="constructorBased" value="false" />
             <generatedKey column="id" sqlStatement="JDBC" />

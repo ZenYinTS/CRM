@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div data-options="region:'south',split:true" style="height:50px;background: url('${ctp}/img/banner-pic.gif') no-repeat;background-size: cover;text-align: center">
+        <div data-options="region:'south',split:true" style="height:20px;background: url('${ctp}/img/banner-pic.gif') no-repeat;background-size: cover;text-align: center">
             版权所有
         </div>
     </div>

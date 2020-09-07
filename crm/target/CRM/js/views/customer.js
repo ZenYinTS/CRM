@@ -4,15 +4,14 @@
     //3. 统一处理按钮监听
     var customerDatagrid , customerFailed , customerDialog , customerForm , customerFormId ,
         customerKeyWord,clearField,inputTime,handOverDialog,cNameInput,inchargeNameInput,
-        inchargeUserInput,handOverForm,customerStatus,customerUserId;
+        inchargeUserInput,handOverForm,customerStatus;
     customerDatagrid = $("#customer_datagrid");
-    customerFailed = $("[iconCls='icon-edit'],[iconCls='icon-remove'],[iconCls='icon-tip'],[iconCls='icon-remove'],#formalBtn");
+    customerFailed = $("[iconCls='icon-edit'],[iconCls='icon-remove'],[iconCls='icon-tip'],[iconCls='icon-cancel'],#formalBtn");
     customerDialog = $("#customer_dialog");
     customerForm = $("#customer_form");
     customerFormId = $("#customer_form [name='id']");
     customerKeyWord = $("[name='keyWord']");
     customerStatus = $("#sl_status");
-    customerUserId = $("[name='userId']");
     clearField = $("[name='name'],[name='age'],[name='gender'],[name='tel'],[name='email'],[name='qq'],[name='wechat'],[name='job.id'],[name='salarylevel.id'],[name='customersource.id']");
     inputTime = $("[name = 'inputtime']");
     handOverDialog = $("#customer_handOver_dialog");
@@ -23,9 +22,10 @@
 
 
     //分页
+    var type = $("#type").val();
     customerDatagrid.datagrid({
         fit:true,
-        url:'customer_list',
+        url:'customer_list?type='+type,
         fitColumns:true,
         rownumbers:true,
         singleSelect : true,
@@ -168,7 +168,52 @@
             }
         },
 
-
+        move:function () {
+            //获取选中的数据
+            var rowData = customerDatagrid.datagrid("getSelected");
+            if (rowData){
+                $.messager.confirm("温馨提示","您确定要将这条数据移入资源池吗？",function (yes) {
+                    if (yes){
+                        $.get("customer_move?id="+rowData.id,
+                            function (data) {
+                                if (data.success){
+                                    $.messager.alert("温馨提示",data.msg,"info",function () {
+                                        //刷新数据表格
+                                        customerDatagrid.datagrid("reload");
+                                    });
+                                }else {
+                                    $.messager.alert("温馨提示",data.msg,"info");
+                                }
+                            },"json")
+                    }
+                });
+            }else {
+                $.messager.alert("温馨提示","请选择一条移入资源池的数据","info");
+            }
+        },
+        lose:function () {
+            //获取选中的数据
+            var rowData = customerDatagrid.datagrid("getSelected");
+            if (rowData){
+                $.messager.confirm("温馨提示","您确定要操作这条数据吗？",function (yes) {
+                    if (yes){
+                        $.get("customer_lose?id="+rowData.id,
+                            function (data) {
+                                if (data.success){
+                                    $.messager.alert("温馨提示",data.msg,"info",function () {
+                                        //刷新数据表格
+                                        customerDatagrid.datagrid("reload");
+                                    });
+                                }else {
+                                    $.messager.alert("温馨提示",data.msg,"info");
+                                }
+                            },"json")
+                    }
+                });
+            }else {
+                $.messager.alert("温馨提示","请选择一条需要流失的数据","info");
+            }
+        },
         remove:function () {
             //获取选中的数据
             var rowData = customerDatagrid.datagrid("getSelected");

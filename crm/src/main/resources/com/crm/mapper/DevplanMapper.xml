@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.DevplanMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Devplan">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="planTime" jdbcType="TIMESTAMP" property="plantime" />
+    <result column="planSubject" jdbcType="VARCHAR" property="plansubject" />
+    <result column="planDetails" jdbcType="VARCHAR" property="plandetails" />
+    <result column="traceResult" jdbcType="SMALLINT" property="traceresult" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="inputTime" jdbcType="TIMESTAMP" property="inputtime" />
+    <result column="type" jdbcType="BIT" property="type" />
+    <association property="plantype" javaType="com.crm.domain.Dictdetail" columnPrefix="dt_">
+      <id column="id" property="id"/>
+      <result column="name" property="name"></result>
+    </association>
+    <association property="customer" javaType="com.crm.domain.Customer" columnPrefix="c_">
+      <id column="id" property="id"/>
+      <result column="name" property="name"/>
+    </association>
+    <association property="inputuser" javaType="com.crm.domain.Employee" columnPrefix="e_">
+      <id column="id" property="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+  </resultMap>
+
+  <sql id="where_sql">
+    <where>
+        p.type = #{type}
+      <if test="userId != null">
+        and p.inputUser_id = #{userId}
+      </if>
+      <if test="cid != null">
+        and p.customer_id = #{cid}
+      </if>
+      <if test="startTime !=null">
+        and p.inputTime>= #{startTime}
+      </if>
+      <if test="endTime !=null">
+        and p.inputTime &lt;= #{endTime}
+      </if>
+    </where>
+    order by p.inputTime desc
+  </sql>
+
+  <!-- Long getTotalForPage(DevplanQueryObject queryObject); -->
+  <select id="getTotalForPage" resultType="java.lang.Long">
+    select COUNT(*) from devplan p
+    <include refid="where_sql"></include>
+  </select>
+
+  <!-- List queryForPage(DevplanQueryObject queryObject); -->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    SELECT p.* , c.id AS c_id , c.name AS c_name , dt.id AS dt_id , dt.name AS dt_name ,
+    e.id AS e_id , e.username AS e_username , e.realname AS e_realname
+    FROM devplan p LEFT JOIN customer c ON p.customer_id = c.id
+    LEFT JOIN dictdetail dt ON p.planType_id = dt.id
+    LEFT JOIN employee e ON p.inputUser_id = e.id
+    <include refid="where_sql"></include>
+    <if test="page!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from devplan
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Devplan" useGeneratedKeys="true">
+    insert into devplan (planTime, planSubject, planDetails, 
+      planType_id, traceResult, remark, 
+      customer_id, inputUser_id, inputTime, 
+      type)
+    values (#{plantime,jdbcType=TIMESTAMP}, #{plansubject,jdbcType=VARCHAR}, #{plandetails,jdbcType=VARCHAR}, 
+      #{plantype.id,jdbcType=BIGINT}, #{traceresult,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR},
+      #{customer.id,jdbcType=BIGINT}, #{inputuser.id,jdbcType=BIGINT}, #{inputtime,jdbcType=TIMESTAMP},
+      #{type,jdbcType=BIT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Devplan">
+    update devplan
+    set planTime = #{plantime,jdbcType=TIMESTAMP},
+      planSubject = #{plansubject,jdbcType=VARCHAR},
+      planDetails = #{plandetails,jdbcType=VARCHAR},
+      planType_id = #{plantype.id,jdbcType=BIGINT},
+      traceResult = #{traceresult,jdbcType=SMALLINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      customer_id = #{customer.id,jdbcType=BIGINT},
+      inputUser_id = #{inputuser.id,jdbcType=BIGINT},
+      inputTime = #{inputtime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, planTime, planSubject, planDetails, planType_id, traceResult, remark, 
+    customer_id, inputUser_id, inputTime, type
+    from devplan
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, planTime, planSubject, planDetails, planType_id, traceResult, remark, 
+    customer_id, inputUser_id, inputTime, type
+    from devplan
+  </select>
+</mapper>

@@ -81,6 +81,33 @@ public class DictController {
         }
         return result;
     }
+
+    @ResponseBody
+    @RequestMapping("/job_queryInDetail")
+    public List<Dictdetail> job(){
+        List<Dictdetail> result = dictdetailService.jobQueryInDetail();
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("/salarylevel_queryInDetail")
+    public List<Dictdetail> salarylevel(){
+        List<Dictdetail> result = dictdetailService.salarylevelQueryInDetail();
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("/customersource_queryInDetail")
+    public List<Dictdetail> customersource(){
+        List<Dictdetail> result = dictdetailService.customersourceQueryInDetail();
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("/listPlanType")
+    public List<Dictdetail> listPlanType(){
+        return dictdetailService.listPlanType();
+    }
 }
 
 
