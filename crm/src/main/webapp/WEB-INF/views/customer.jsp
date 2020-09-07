@@ -19,50 +19,55 @@
 <div id="customer_datagrid_tb">
     <div>
         <%-- 按钮权限控制 --%>
-        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:save')}">
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:takein') && 'resource'.equals(type)}">
+            <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="takein">吸纳</a>
+        </c:if>
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:save') && ('formal'.equals(type) || 'potential'.equals(type))}">
             <a id="addBtn" iconCls="icon-add" class="easyui-linkbutton" plain="true" data-cmd="add">新增</a>
         </c:if>
-        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:update')}">
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:update') && ('formal'.equals(type) || 'potential'.equals(type))}">
             <a iconCls="icon-edit" class="easyui-linkbutton" plain="true" data-cmd="edit">编辑</a>
         </c:if>
         <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:move') && 'formal'.equals(type)}">
             <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="move">移入资源池</a>
         </c:if>
-        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:share')}">
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:share') && ('formal'.equals(type) || 'potential'.equals(type))}">
             <a iconCls="icon-tip" class="easyui-linkbutton" plain="true" data-cmd="share">共享</a>
         </c:if>
-        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:handOver')}">
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:handOver') && ('formal'.equals(type) || 'potential'.equals(type))}">
             <a iconCls="icon-tip" class="easyui-linkbutton" plain="true" data-cmd="handOver">移交</a>
         </c:if>
         <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:remove') && 'potential'.equals(type)}">
             <a iconCls="icon-remove" class="easyui-linkbutton" plain="true" data-cmd="remove">开发失败</a>
         </c:if>
-            <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:lose') && 'formal'.equals(type)}">
-                <a iconCls="icon-cancel" class="easyui-linkbutton" plain="true" data-cmd="lose">流失</a>
-            </c:if>
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:lose') && 'formal'.equals(type)}">
+            <a iconCls="icon-cancel" class="easyui-linkbutton" plain="true" data-cmd="lose">流失</a>
+        </c:if>
         <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:formal') && 'potential'.equals(type)}">
             <a id="formalBtn" iconCls="icon-add" class="easyui-linkbutton" plain="true" data-cmd="formal">转正</a>
         </c:if>
         <a iconCls="icon-reload" class="easyui-linkbutton" plain="true" data-cmd="refresh">刷新</a>
-            <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:output') && 'formal'.equals(type)}">
-                <a iconCls="icon-redo" class="easyui-linkbutton" plain="true" href="${ctp}/customer_output">导出用户</a>
-            </c:if>
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.CustomerController:output') && 'formal'.equals(type)}">
+            <a iconCls="icon-redo" class="easyui-linkbutton" plain="true" href="${ctp}/customer_output">导出用户</a>
+        </c:if>
     </div>
     <div>
         关键字查询：<input type="text" name="keyWord">
-        <select id="sl_status" class="easyui-combobox" name="status" style="width:100px;"
-                data-options="panelHeight:'auto'">
-            <c:if test="${'potential'.equals(type)}">
-                <option value="-3">全部</option>
-                <option value="0">潜在客户</option>
-                <option value="-1">开发失败</option>
-            </c:if>
-            <c:if test="${'formal'.equals(type)}">
-                <option value="-4">全部</option>
-                <option value="1">正式客户</option>
-                <option value="-2">流失客户</option>
-            </c:if>
-        </select>
+        <c:if test="${!'resourcce'.equals(type)}">
+            <select id="sl_status" class="easyui-combobox" name="status" style="width:100px;"
+                    data-options="panelHeight:'auto'">
+                <c:if test="${'potential'.equals(type)}">
+                    <option value="-3">全部</option>
+                    <option value="0">潜在客户</option>
+                    <option value="-1">开发失败</option>
+                </c:if>
+                <c:if test="${'formal'.equals(type)}">
+                    <option value="-4">全部</option>
+                    <option value="1">正式客户</option>
+                    <option value="-2">流失客户</option>
+                </c:if>
+            </select>
+        </c:if>
         <a class="easyui-linkbutton" iconCls="icon-search" data-cmd="searchBtn">搜索</a>
     </div>
 </div>

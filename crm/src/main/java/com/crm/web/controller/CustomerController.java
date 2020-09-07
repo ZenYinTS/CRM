@@ -60,8 +60,14 @@ public class CustomerController {
                 queryObject.setStatus(0);
             if ("formal".equals(type))
                 queryObject.setStatus(1);
+            if ("resource".equals(type))
+                queryObject.setStatus(2);
         }
-        queryObject.setIsSE(isSE(e));
+        if ("resource".equals(type))
+            queryObject.setIsSE(true);
+        else
+            queryObject.setIsSE(isSE(e));
+
         return customerService.queryForPage(queryObject);
     }
 
@@ -102,6 +108,22 @@ public class CustomerController {
             result =  new AjaxResult(true,"更新成功！");
         }catch (Exception e){
             result = new AjaxResult("更新失败，请联系管理员！");
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping("/customer_takein")
+    public AjaxResult takein(Long id){
+        AjaxResult result  = null;
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setStatus(1);
+        try{
+            customerService.updateByPrimaryKey(customer);
+            result = new AjaxResult(true,"吸纳资源池客户成功！");
+        }catch (Exception e){
+            result = new AjaxResult("吸纳客户失败，请联系管理员！");
         }
         return result;
     }

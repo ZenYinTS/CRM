@@ -167,7 +167,29 @@
                 $.messager.alert("温馨提示","请选择一条需要编辑的数据","info");
             }
         },
-
+        takein:function () {
+            //获取选中的数据
+            var rowData = customerDatagrid.datagrid("getSelected");
+            if (rowData){
+                $.messager.confirm("温馨提示","您确定要吸纳该资源池客户吗？",function (yes) {
+                    if (yes){
+                        $.get("customer_takein?id="+rowData.id,
+                            function (data) {
+                                if (data.success){
+                                    $.messager.alert("温馨提示",data.msg,"info",function () {
+                                        //刷新数据表格
+                                        customerDatagrid.datagrid("reload");
+                                    });
+                                }else {
+                                    $.messager.alert("温馨提示",data.msg,"info");
+                                }
+                            },"json")
+                    }
+                });
+            }else {
+                $.messager.alert("温馨提示","请选择一条需要吸纳的数据","info");
+            }
+        },
         move:function () {
             //获取选中的数据
             var rowData = customerDatagrid.datagrid("getSelected");
