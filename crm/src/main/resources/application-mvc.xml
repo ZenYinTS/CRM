@@ -26,7 +26,7 @@
     <mvc:annotation-driven></mvc:annotation-driven>
 
     <!-- 配置文件上传下载 -->
-    <bean  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding"  value="utf-8"></property>
         <property name="maxUploadSize"  value="#{1024*1024*20}"></property>
     </bean>

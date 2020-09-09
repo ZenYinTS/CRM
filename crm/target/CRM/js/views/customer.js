@@ -171,7 +171,7 @@
             //获取选中的数据
             var rowData = customerDatagrid.datagrid("getSelected");
             if (rowData){
-                $.messager.confirm("温馨提示","您确定要将这条数据移入资源池吗？",function (yes) {
+                $.messager.confirm("温馨提示","您确定要吸纳该资源池客户吗？",function (yes) {
                     if (yes){
                         $.get("customer_takein?id="+rowData.id,
                             function (data) {

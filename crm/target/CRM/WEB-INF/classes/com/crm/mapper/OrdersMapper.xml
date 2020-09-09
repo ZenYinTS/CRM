@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.OrdersMapper">
+    <resultMap id="BaseResultMap" type="com.crm.domain.Orders">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="signTime" jdbcType="TIMESTAMP" property="signtime"/>
+        <result column="totalSum" jdbcType="REAL" property="totalsum"/>
+        <result column="summoney" jdbcType="REAL" property="summoney"/>
+        <result column="intro" jdbcType="VARCHAR" property="intro"/>
+        <result column="file" jdbcType="VARCHAR" property="file"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime"/>
+        <result column="status" jdbcType="SMALLINT" property="status"/>
+        <association property="customer" javaType="com.crm.domain.Customer" columnPrefix="c_">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+        <association property="seller" javaType="com.crm.domain.Employee" columnPrefix="sell_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="realname" property="realname"/>
+        </association>
+        <association property="modifyuser" javaType="com.crm.domain.Employee" columnPrefix="mu_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="realname" property="realname"/>
+        </association>
+    </resultMap>
+
+    <sql id="where_sql">
+        <where>
+            <if test="keyWord!=null and keyWord.length()!=0">
+                (c.name like concat('%',#{keyWord},'%'))
+            </if>
+            <if test="status!=null">
+                and o.status = #{status}
+            </if>
+            <if test="startTime !=null">
+                and o.signTime >= #{startTime}
+            </if>
+            <if test="endTime !=null">
+                and o.signTime &lt;= #{endTime}
+            </if>
+        </where>
+    </sql>
+
+    <!--  Long getTotalRows(OrdersQueryObject queryObject); -->
+    <select id="getTotalRows" resultType="java.lang.Long">
+        select COUNT(*) from orders o LEFT JOIN customer c ON o.customer_id = c.id
+        <include refid="where_sql"></include>
+    </select>
+
+    <!--  List<Orders> queryForPage(OrdersQueryObject queryObject);-->
+    <select id="queryForPage" resultMap="BaseResultMap">
+      SELECT o.* , c.id AS c_id ,c.name AS c_name , sell.id AS sell_id , sell.username AS sell_username ,
+          sell.realname AS sell_realname , mu.id AS mu_id , mu.username AS mu_username , mu.realname AS mu_realname
+      FROM orders o LEFT JOIN customer c ON o.customer_id = c.id
+      LEFT JOIN employee sell ON o.seller_id = sell.id
+      LEFT JOIN employee mu ON o.modifyUser_id = mu.id
+      <include refid="where_sql"></include>
+      <if test="page!=null">
+        limit #{start},#{rows}
+      </if>
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+      delete from orders
+      where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Orders" useGeneratedKeys="true">
+      insert into orders (customer_id, signTime, seller_id,
+        totalSum, summoney, intro,
+        file, createTime, modifyUser_id,
+        modifyTime, status)
+      values (#{customer.id,jdbcType=BIGINT}, #{signtime,jdbcType=TIMESTAMP}, #{seller.id,jdbcType=BIGINT},
+        #{totalsum,jdbcType=REAL}, #{summoney,jdbcType=REAL}, #{intro,jdbcType=VARCHAR},
+        #{file,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{modifyuser.id,jdbcType=BIGINT},
+        #{modifytime,jdbcType=TIMESTAMP}, #{status,jdbcType=SMALLINT})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.crm.domain.Orders">
+      update orders
+      <set>
+          <if test="customer!=null">
+              customer_id = #{customer.id,jdbcType=BIGINT},
+          </if>
+          <if test="signtime!=null">
+              signTime = #{signtime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="seller!=null">
+              seller_id = #{seller.id,jdbcType=BIGINT},
+          </if>
+          <if test="totalsum!=null">
+              totalSum = #{totalsum,jdbcType=REAL},
+          </if>
+          <if test="summoney!=null">
+              summoney = #{summoney,jdbcType=REAL},
+          </if>
+          <if test="intro!=null">
+              intro = #{intro,jdbcType=VARCHAR},
+          </if>
+          <if test="file!=null">
+              file = #{file,jdbcType=VARCHAR},
+          </if>
+          <if test="createtime!=null">
+              createTime = #{createtime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="modifyuser!=null">
+              modifyUser_id = #{modifyuser.id,jdbcType=BIGINT},
+          </if>
+          <if test="modifytime!=null">
+              modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="status!=null">
+              status = #{status,jdbcType=SMALLINT}
+          </if>
+      </set>
+      where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      SELECT o.* , c.id AS c_id ,c.name AS c_name , sell.id AS sell_id , sell.username AS sell_username ,
+          sell.realname AS sell_realname , mu.id AS mu_id , mu.username AS mu_username , mu.realname AS mu_realname
+      FROM orders o LEFT JOIN customer c ON o.customer_id = c.id
+      LEFT JOIN employee sell ON o.seller_id = sell.id
+      LEFT JOIN employee mu ON o.modifyUser_id = mu.id
+      where o.id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+      SELECT o.* , c.id AS c_id ,c.name AS c_name , sell.id AS sell_id , sell.username AS sell_username ,
+          sell.realname AS sell_realname , mu.id AS mu_id , mu.username AS mu_username , mu.realname AS mu_realname
+      FROM orders o LEFT JOIN customer c ON o.customer_id = c.id
+      LEFT JOIN employee sell ON o.seller_id = sell.id
+      LEFT JOIN employee mu ON o.modifyUser_id = mu.id
+    </select>
+</mapper>

@@ -121,7 +121,17 @@
 <!--            <generatedKey column="id" sqlStatement="JDBC" />-->
 <!--        </table>-->
 
-        <table tableName="devplan">
+<!--        <table tableName="devplan">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+<!--        <table tableName="orders">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+        <table tableName="contract">
             <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
             <property name="constructorBased" value="false" />
             <generatedKey column="id" sqlStatement="JDBC" />
