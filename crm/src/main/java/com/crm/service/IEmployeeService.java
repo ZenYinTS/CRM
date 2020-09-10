@@ -28,4 +28,5 @@ public interface IEmployeeService {
 
     List<Employee> selectAllSells(Long inchargeId);
 
+    Employee selectByUsername(String username);
 }

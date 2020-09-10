@@ -136,12 +136,17 @@
 <!--            <property name="constructorBased" value="false" />-->
 <!--            <generatedKey column="id" sqlStatement="JDBC" />-->
 <!--        </table>-->
-        <table tableName="guarantee">
-            <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
-            <property name="constructorBased" value="false" />
-            <generatedKey column="id" sqlStatement="JDBC" />
-        </table>
-        <table tableName="guaranteeitem">
+<!--        <table tableName="guarantee">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+<!--        <table tableName="guaranteeitem">-->
+<!--            &lt;!&ndash; 参考 javaModelGenerator 的 constructorBased属性 &ndash;&gt;-->
+<!--            <property name="constructorBased" value="false" />-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" />-->
+<!--        </table>-->
+        <table tableName="salarytable">
             <!-- 参考 javaModelGenerator 的 constructorBased属性 -->
             <property name="constructorBased" value="false" />
             <generatedKey column="id" sqlStatement="JDBC" />

@@ -19,6 +19,11 @@ public class EmployeeImpl implements IEmployeeService {
     private EmployeeMapper employeeDao;
 
     @Override
+    public Employee selectByUsername(String username) {
+        return employeeDao.selectByUsername(username);
+    }
+
+    @Override
     public int deleteByPrimaryKey(Long id) {
         employeeDao.deleteRelation(id);
         int effectCount =  employeeDao.deleteByPrimaryKey(id);

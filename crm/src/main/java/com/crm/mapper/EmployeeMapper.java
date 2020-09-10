@@ -34,4 +34,6 @@ public interface EmployeeMapper {
     List<Employee> queryForDept(Long id);
 
     List<Employee> selectAllSells(Long inchargeId);
+
+    Employee selectByUsername(String username);
 }

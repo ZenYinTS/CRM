@@ -11,20 +11,21 @@ import java.io.*;
 import java.util.UUID;
 
 public class UploadUtils {
-    //抽取共同的springMVC图片上传方法
-    public static String mulipartFileUpload(MultipartFile pic, HttpServletRequest request) {
-        if (pic.getSize()==0)
+    //抽取共同的springMVC文件上传方法
+    public static String mulipartFileUpload(MultipartFile file, HttpServletRequest request) {
+        if (file.getSize()==0)
             return "";
         String realPath1 = request.getSession().getServletContext().getRealPath("/upload");
         String realPath2 = realPath1.replace("\\", "/") + "/";
-        String realName1 = UUID.randomUUID() + "." + pic.getContentType().split("/")[1];
+        String[] split = file.getOriginalFilename().split("\\.");
+        String realName1 = split[0] + UUID.randomUUID() +"."+ split[1];
         String realName2 = "/upload/" + realName1;
-        //springMVC图片上传
-        if (pic != null) {
+        //springMVC上传
+        if (file != null) {
             InputStream inputStream = null;
             FileOutputStream outputStream = null;
             try {
-                inputStream = pic.getInputStream();
+                inputStream = file.getInputStream();
                 outputStream = new FileOutputStream(new File(realPath2 + realName1));
                 IOUtils.copy(inputStream, outputStream);
             } catch (Exception e) {

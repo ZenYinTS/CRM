@@ -18,6 +18,11 @@
     </association>
   </resultMap>
 
+  <!-- Employee selectByUsername(String username); -->
+  <select id="selectByUsername" resultMap="BaseResultMap">
+    select * from employee where username = #{username};
+  </select>
+
   <!-- List<Employee> selectAllSells(Long inchargeId); -->
   <select id="selectAllSells" resultMap="BaseResultMap">
     select * from employee where id != #{inchargeId} and id in (select e_id from emp_role

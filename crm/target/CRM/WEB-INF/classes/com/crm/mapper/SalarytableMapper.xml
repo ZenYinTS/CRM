@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.SalarytableMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Salarytable">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="year" jdbcType="INTEGER" property="year" />
+    <result column="month" jdbcType="INTEGER" property="month" />
+    <result column="salary" jdbcType="REAL" property="salary" />
+    <association property="emp" javaType="com.crm.domain.Employee" columnPrefix="e_">
+      <id column="id" property="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+  </resultMap>
+
+  <sql id="where_sql">
+    <where>
+      <if test="keyWord!=null and keyWord.length()!=0">
+        (e.username like concat('%',#{keyWord},'%') or e.realname like concat('%',#{keyWord},'%'))
+      </if>
+      <if test="year!=null">
+        and s.year = #{year}
+      </if>
+      <if test="month !=null">
+        and s.month = #{month}
+      </if>
+    </where>
+  </sql>
+
+  <!--  Long getTotalRows(SalaryQueryObject queryObject); -->
+  <select id="getTotalRows" resultType="java.lang.Long">
+    select COUNT(*) from salarytable s LEFT JOIN employee e ON s.emp_id = e.id
+    <include refid="where_sql"></include>
+  </select>
+
+  <!--  List<Salarytable> queryForPage(SalaryQueryObject queryObject);-->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    SELECT s.*,e.id AS e_id,e.username AS e_username,e.realname AS e_realname
+    FROM salarytable s LEFT JOIN employee e ON s.emp_id = e.id
+    <include refid="where_sql"></include>
+    <if test="page!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from salarytable
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Salarytable" useGeneratedKeys="true">
+    insert into salarytable (year, month, salary, 
+      emp_id)
+    values (#{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER}, #{salary,jdbcType=REAL}, 
+      #{emp.id,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Salarytable">
+    update salarytable
+    set year = #{year,jdbcType=INTEGER},
+      month = #{month,jdbcType=INTEGER},
+      salary = #{salary,jdbcType=REAL},
+      emp_id = #{emp.id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, year, month, salary, emp_id
+    from salarytable
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, year, month, salary, emp_id
+    from salarytable
+  </select>
+</mapper>
