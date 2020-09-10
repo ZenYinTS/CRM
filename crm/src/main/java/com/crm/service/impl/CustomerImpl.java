@@ -67,4 +67,9 @@ public class CustomerImpl implements ICustomerService {
     public List<Customer> queryForPageOnly(CustomerQueryObject queryObject) {
         return customerDao.queryForPage(queryObject);
     }
+
+    @Override
+    public List<Customer> listContractCustomer() {
+        return customerDao.listContractCustomer();
+    }
 }

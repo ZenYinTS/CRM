@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.GuaranteeMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Guarantee">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sn" jdbcType="VARCHAR" property="sn" />
+    <result column="productName" jdbcType="VARCHAR" property="productname" />
+    <result column="dueTime" jdbcType="TIMESTAMP" property="duetime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <association property="customer" javaType="com.crm.domain.Customer" columnPrefix="c_">
+      <id column="id" property="id"/>
+      <result column="name" property="name"/>
+    </association>
+  </resultMap>
+
+  <!-- 高级查询 -->
+  <sql id="where_sql">
+    <where>
+      <if test="keyWord!=null and keyWord.length()!=0">
+        (g.sn like concat('%',#{keyWord},'%') or
+        g.productName like concat('%',#{keyWord},'%'))
+      </if>
+    </where>
+  </sql>
+
+  <!-- Long getTotalRows(GuaranteeQueryObject queryObject); -->
+  <select id="getTotalRows" resultType="java.lang.Long">
+    select COUNT(*) from guarantee g
+    <include refid="where_sql"></include>
+  </select>
+
+  <!-- List<Guarantee> queryForPage(GuaranteeQueryObject queryObject);-->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    select g.*,c.id as c_id,c.name as c_name from guarantee g
+    left join customer c on g.customer_id = c.id
+    <include refid="where_sql"></include>
+    <if test="page!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from guarantee
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Guarantee" useGeneratedKeys="true">
+    insert into guarantee (sn, productName, customer_id, 
+      dueTime, remark)
+    values (#{sn,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR}, #{customer.id,jdbcType=BIGINT},
+      #{duetime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Guarantee">
+    update guarantee
+    <set>
+      <if test="sn!=null">
+      sn = #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="productname!=null">
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="customer!=null">
+        customer_id = #{customer.id,jdbcType=BIGINT},
+      </if>
+      <if test="duetime!=null">
+        dueTime = #{duetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark!=null">
+        remark = #{remark,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, sn, productName, customer_id, dueTime, remark
+    from guarantee
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sn, productName, customer_id, dueTime, remark
+    from guarantee
+  </select>
+</mapper>

@@ -27,4 +27,5 @@ public interface CustomerMapper {
 
     List<Customer> selectAllFormal();
 
+    List<Customer> listContractCustomer();
 }

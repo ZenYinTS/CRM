@@ -123,10 +123,12 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select id, sn, customer_id, signTime, seller_id, summoney, money, payTime, intro, 
-    status, file, modifyUser_id, modifyTime
-    from contract
-    where id = #{id,jdbcType=BIGINT}
+    SELECT ct.* , c.id AS c_id ,c.name AS c_name , sell.id AS sell_id , sell.username AS sell_username ,
+    sell.realname AS sell_realname , mu.id AS mu_id , mu.username AS mu_username , mu.realname AS mu_realname
+    FROM contract ct LEFT JOIN customer c ON ct.customer_id = c.id
+    LEFT JOIN employee sell ON ct.seller_id = sell.id
+    LEFT JOIN employee mu ON ct.modifyUser_id = mu.id
+    where ct.id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select id, sn, customer_id, signTime, seller_id, summoney, money, payTime, intro, 

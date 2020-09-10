@@ -60,6 +60,11 @@
         order by c.inputTime desc
     </sql>
 
+    <!--  List<Customer> listContractCustomer();  -->
+    <select id="listContractCustomer" resultMap="BaseResultMap">
+        select * from customer where id in (select customer_id from contract where customer_id is NOT NULL)
+    </select>
+
     <!-- List<Customer> selectAllFormal(); -->
     <select id="selectAllFormal" resultMap="BaseResultMap">
     SELECT c.*,dtJob.id AS jobId,dtJob.name AS jobName,dtLevel.id AS levelId,

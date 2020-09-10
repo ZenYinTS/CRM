@@ -1,10 +1,10 @@
 package com.crm.web.controller;
 
-import com.crm.domain.Contract;
-import com.crm.domain.Employee;
-import com.crm.domain.PageResult;
+import com.crm.domain.*;
 import com.crm.query.ContractQueryObject;
 import com.crm.service.IContractService;
+import com.crm.service.ICustomerService;
+import com.crm.service.IGuaranteeService;
 import com.crm.util.AjaxResult;
 import com.crm.util.UploadUtils;
 import com.crm.util.UserContext;
@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,6 +27,12 @@ public class ContractController {
 
     @Autowired
     private IContractService contractService;
+
+    @Autowired
+    private IGuaranteeService guaranteeService;
+
+    @Autowired
+    private ICustomerService customerService;
 
     @RequestMapping("/contract")
     public String list() {
@@ -101,6 +108,16 @@ public class ContractController {
                 contract.setStatus((short) 2);
             contractService.updateByPrimaryKey(contract);
             result = new AjaxResult(true, "审核完成！");
+            //自动生成保修单
+            Calendar c = Calendar.getInstance();
+            Contract con = contractService.selectByPrimaryKey(contract.getId());
+            Date paytime = con.getPaytime();
+            c.setTime(paytime);
+            c.add(Calendar.YEAR,1);
+
+            Customer customer = customerService.selectByPrimaryKey(con.getCustomer().getId());
+            Guarantee guarantee = new Guarantee(null,UUID.randomUUID().toString(),null,customer,c.getTime(),null);
+            guaranteeService.insert(guarantee);
         } catch (Exception e) {
             System.out.println(e);
             result = new AjaxResult("审核失败，请联系管理员！");

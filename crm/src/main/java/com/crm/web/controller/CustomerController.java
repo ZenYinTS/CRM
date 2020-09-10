@@ -49,6 +49,14 @@ public class CustomerController {
     }
 
     @ResponseBody
+    @RequestMapping("/customer_contract")
+    public List<Customer> listContractCustomer(){
+        List<Customer> customers = null;
+        customers = customerService.listContractCustomer();
+        return customers;
+    }
+
+    @ResponseBody
     @RequestMapping("/customer_list")
     public PageResult queryForPage(String type,CustomerQueryObject queryObject){
         Employee e = (Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION);

@@ -10,7 +10,7 @@
 
 <body>
     <div class="easyui-layout" fit="true" style="width:100%;height:100%;">
-        <div data-options="region:'north'" style="height:100px;background: url('${ctp}/img/banner-pic.gif') no-repeat;background-size: cover">
+        <div data-options="region:'north'" style="height:50px;background: url('${ctp}/img/banner-pic.gif') no-repeat;background-size: cover">
             <h1>客户关系管理系统</h1>
         </div>
 

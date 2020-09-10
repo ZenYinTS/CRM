@@ -42,12 +42,8 @@
         onClickRow: function (rowIndex, rowData) {
             if (rowData.status == 0) {
                 btnCheck.linkbutton("enable");
-                btnDCheck.linkbutton("disable");
-                btnFCheck.linkbutton("disable");
             } else if (rowData.status == 1 || rowData.status == 2) {
                 btnCheck.linkbutton("disable");
-                btnDCheck.linkbutton("disable");
-                btnFCheck.linkbutton("disable");
             }
         }
     });
