@@ -63,10 +63,6 @@ public class CustomerImpl implements ICustomerService {
         return customerDao.updateStatus(id,i);
     }
 
-    @Override
-    public List<Customer> queryForPageOnly(CustomerQueryObject queryObject) {
-        return customerDao.queryForPage(queryObject);
-    }
 
     @Override
     public List<Customer> listContractCustomer() {

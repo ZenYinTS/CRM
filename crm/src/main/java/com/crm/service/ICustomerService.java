@@ -25,7 +25,5 @@ public interface ICustomerService {
 
     List<Customer> selectAllFormal();
 
-    List<Customer> queryForPageOnly(CustomerQueryObject queryObject);
-
     List<Customer> listContractCustomer();
 }

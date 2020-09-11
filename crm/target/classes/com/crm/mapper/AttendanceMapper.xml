@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.AttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Attendance">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="signinTime" jdbcType="TIMESTAMP" property="signintime" />
+    <result column="signoutTime" jdbcType="TIMESTAMP" property="signouttime" />
+    <result column="resignTime" jdbcType="TIMESTAMP" property="resigntime" />
+    <association property="emp" javaType="com.crm.domain.Employee" columnPrefix="e_">
+      <id column="id" property="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+    <association property="resignemp" javaType="com.crm.domain.Employee" columnPrefix="re_">
+      <id column="id" property="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+  </resultMap>
+
+  <sql id="where_sql">
+    <where>
+
+    </where>
+  </sql>
+
+  <!-- Long getTotalRows(AttendanceQueryObject queryObject); -->
+  <select id="getTotalRows" resultType="java.lang.Long">
+    select COUNT(*) from attendance a
+    <include refid="where_sql"></include>
+  </select>
+
+  <!-- List<Attendance> queryForPage(AttendanceQueryObject queryObject); -->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    select a.*,e.id as e_id,e.username as e_username,e.realname as e_realname,
+    re.id as re_id,re.username as re_username,re.realname as re_realname
+    from attendance a left join employee e on a.emp_id = e.id
+    left join employee re on a.resignEmp_id = re.id
+    <include refid="where_sql"></include>
+    <if test="page!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <!-- Attendance queryForSignInfo(Long empId, Date startTime, Date endTime); -->
+  <select id="queryForSignInfo" resultMap="BaseResultMap">
+    select a.*,e.id as e_id,e.username as e_username,e.realname as e_realname,
+        re.id as re_id,re.username as re_username,re.realname as re_realname
+     from attendance a left join employee e on a.emp_id = e.id
+     left join employee re on a.resignEmp_id = re.id
+    where a.emp_id = #{empId} and a.signinTime between #{startTime} and #{endTime}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from attendance
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Attendance" useGeneratedKeys="true">
+    insert into attendance (emp_id, ip, status, 
+      signinTime, signoutTime, resignEmp_id,
+      resignTime)
+    values (#{emp.id,jdbcType=BIGINT}, #{ip,jdbcType=VARCHAR}, #{status,jdbcType=SMALLINT},
+      #{signintime,jdbcType=TIMESTAMP}, #{signouttime,jdbcType=TIMESTAMP}, #{resignemp.id,jdbcType=BIGINT},
+      #{resigntime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Attendance">
+    update attendance
+    set emp_id = #{emp.id,jdbcType=BIGINT},
+      ip = #{ip,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      signinTime = #{signintime,jdbcType=TIMESTAMP},
+      signoutTime = #{signouttime,jdbcType=TIMESTAMP},
+      resignEmp_id = #{resignemp.id,jdbcType=BIGINT},
+      resignTime = #{resigntime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, emp_id, ip, status, signinTime, signoutTime, resignEmp_id, resignTime
+    from attendance
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, emp_id, ip, status, signinTime, signoutTime, resignEmp_id, resignTime
+    from attendance
+  </select>
+</mapper>

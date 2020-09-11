@@ -239,7 +239,7 @@ public class CustomerController {
         queryObject.setStatus(0);
         queryObject.setUserId(e.getId());
         queryObject.setPage(null);
-        return customerService.queryForPageOnly(queryObject);
+        return customerService.queryForPage(queryObject).getRows();
     }
 
     @ResponseBody
@@ -251,7 +251,7 @@ public class CustomerController {
         queryObject.setStatus(1);
         queryObject.setUserId(e.getId());
         queryObject.setPage(null);
-        return customerService.queryForPageOnly(queryObject);
+        return customerService.queryForPage(queryObject).getRows();
     }
 
     @RequestMapping("/customer_output")

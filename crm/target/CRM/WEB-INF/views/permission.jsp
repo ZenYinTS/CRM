@@ -36,11 +36,11 @@
         <table align="center" style="margin-top: 18px">
             <tr>
                 <td>权限名称</td>
-                <td><input path="sn" type="text" name="sn"/></td>
+                <td><input type="text" name="sn"/></td>
             </tr>
             <tr>
                 <td>资源地址</td>
-                <td><input path="resource" type="text" name="resource"/> </td>
+                <td><input type="text" name="resource"/> </td>
             </tr>
         </table>
     </form>

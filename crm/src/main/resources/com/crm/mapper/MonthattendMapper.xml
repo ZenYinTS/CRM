@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.MonthattendMapper">
+  <resultMap id="BaseResultMap" type="com.crm.domain.Monthattend">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="outputTime" jdbcType="TIMESTAMP" property="outputtime" />
+    <result column="monthAttendCount" jdbcType="INTEGER" property="monthAttendCount" />
+    <result column="monthLateCount" jdbcType="INTEGER" property="monthLateCount" />
+    <result column="monthLeaveEarlyCount" jdbcType="INTEGER" property="monthLeaveEarlyCount" />
+    <association property="emp" javaType="com.crm.domain.Employee" columnPrefix="e_">
+      <id column="id" property="id"/>
+      <result column="username" property="username"/>
+      <result column="realname" property="realname"/>
+    </association>
+  </resultMap>
+
+  <sql id="where_sql">
+    <where>
+        <if test="eid != null">
+          m.emp_id = #{eid}
+        </if>
+        <if test="year != null">
+          and YEAR(m.outputtime) = #{year}
+        </if>
+      <if test="month != null">
+        and MONTH(m.outputtime) = #{month}
+      </if>
+    </where>
+  </sql>
+
+  <!-- Long getTotalRows(MonthAttendQueryObject queryObject); -->
+  <select id="getTotalRows" resultType="java.lang.Long">
+    select COUNT(*) from monthattend m
+    <include refid="where_sql"></include>
+  </select>
+
+  <!-- List<Monthattend> queryForPage(MonthAttendQueryObject queryObject);-->
+  <select id="queryForPage" resultMap="BaseResultMap">
+    select m.*,e.id as e_id,e.username as e_username,e.realname as e_realname from monthattend m left join employee e on m.emp_id = e.id
+    <include refid="where_sql"></include>
+    <if test="page!=null">
+      limit #{start},#{rows}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from monthattend
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.crm.domain.Monthattend" useGeneratedKeys="true">
+    insert into monthattend (emp_id, outputTime, monthAttendCount, 
+      monthLateCount, monthLeaveEarlyCount)
+    values (#{emp.id,jdbcType=BIGINT}, #{outputtime,jdbcType=TIMESTAMP}, #{monthAttendCount,jdbcType=INTEGER},
+      #{monthLateCount,jdbcType=INTEGER}, #{monthLeaveEarlyCount,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.crm.domain.Monthattend">
+    update monthattend
+    set emp_id = #{emp.id,jdbcType=BIGINT},
+      outputTime = #{outputtime,jdbcType=TIMESTAMP},
+      monthAttendCount = #{monthAttendCount,jdbcType=INTEGER},
+      monthLateCount = #{monthLateCount,jdbcType=INTEGER},
+      monthLeaveEarlyCount = #{monthLeaveEarlyCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, emp_id, outputTime, monthAttendCount, monthLateCount, monthLeaveEarlyCount
+    from monthattend
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, emp_id, outputTime, monthAttendCount, monthLateCount, monthLeaveEarlyCount
+    from monthattend
+  </select>
+</mapper>
