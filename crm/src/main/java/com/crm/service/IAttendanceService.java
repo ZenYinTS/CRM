@@ -22,4 +22,10 @@ public interface IAttendanceService {
     Attendance queryForSignInfo(Long empId);
 
     PageResult queryForPage(AttendanceQueryObject queryObject);
+
+    Long[] queryForEmpId();
+
+    List<Attendance> queryByEid(Long eid);
+
+    Integer countMonthAttend(Long eid, Integer year, Integer month, Short status);
 }

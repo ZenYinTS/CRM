@@ -36,4 +36,6 @@ public interface EmployeeMapper {
     List<Employee> selectAllSells(Long inchargeId);
 
     Employee selectByUsername(String username);
+
+    String[] getFEEmails();
 }

@@ -30,14 +30,14 @@
         </c:forEach>
     </select>
         员工：<input type="text" name="keyWord">
-        <a class="easyui-linkbutton" iconCls="icon-search" onclick="searchBtn()">查询</a>
+        <a class="easyui-linkbutton" iconCls="icon-search"plain="true" onclick="searchBtn()">查询</a>
     </div>
     <div>
         <%-- 按钮权限控制 --%>
         <c:if test="${myFn:checkPermission('com.crm.web.controller.SalaryController:upload')}">
-            <form action="salary_upload" method="post" enctype="multipart/form-data">
+            <form id="salaryForm" action="salary_upload" method="post" enctype="multipart/form-data">
                 上传工资表单：<input type="file" name="file" accept=".xls,.xlsx"/>
-                <button type="submit">提交</button>
+                <a class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="submit()">上传</a>
             </form>
         </c:if>
     </div>

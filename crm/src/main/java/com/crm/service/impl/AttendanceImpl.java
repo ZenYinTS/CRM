@@ -4,7 +4,6 @@ import com.crm.domain.Attendance;
 import com.crm.domain.PageResult;
 import com.crm.mapper.AttendanceMapper;
 import com.crm.query.AttendanceQueryObject;
-import com.crm.query.QueryObject;
 import com.crm.service.IAttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,5 +62,20 @@ public class AttendanceImpl implements IAttendanceService {
             return new PageResult();
         List<Attendance> attendanceList = attendanceDao.queryForPage(queryObject);
         return new PageResult(total,attendanceList);
+    }
+
+    @Override
+    public Long[] queryForEmpId() {
+        return attendanceDao.queryForEmpId();
+    }
+
+    @Override
+    public List<Attendance> queryByEid(Long eid) {
+        return attendanceDao.queryByEid(eid);
+    }
+
+    @Override
+    public Integer countMonthAttend(Long eid, Integer year, Integer month, Short status) {
+        return attendanceDao.countMonthAttend(eid,year,month,status);
     }
 }

@@ -10,6 +10,8 @@ import com.crm.service.IAttendanceService;
 import com.crm.service.IEmployeeService;
 import com.crm.service.IMonthAttendService;
 import com.crm.util.AjaxResult;
+import com.crm.util.MailUtil;
+import com.crm.util.UploadUtils;
 import com.crm.util.UserContext;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,19 +25,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MonthAttendController {
+    @Autowired
+    private IAttendanceService attendanceService;
 
     @Autowired
     private IMonthAttendService monthAttendService;
@@ -44,8 +49,54 @@ public class MonthAttendController {
     private IEmployeeService employeeService;
 
     @RequestMapping("/monthAttend")
-    public String list(){
+    public String list() throws ParseException {
+        updateAttendance();
         return "monthAttend";
+    }
+
+    //考勤表的更新
+    private void updateAttendance() throws ParseException {
+        //1. 获取考勤表的所有员工
+        Long[] eids = attendanceService.queryForEmpId();
+        //2. 循环，对考勤表的每个员工获取其打卡的年份与月份
+        for (Long eid:eids) {
+            List<Attendance> attendanceList = attendanceService.queryByEid(eid);
+            //年份-月份的字符串存放在set中
+            Set<String> dateString = new HashSet<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            for (Attendance attendance : attendanceList) {
+                String date = sdf.format(attendance.getSignintime());
+                dateString.add(date);
+            }
+
+            //遍历set，获取年份以及对应的月份
+            for (String s : dateString) {
+                String[] ym = s.split("-");
+                //年份
+                Integer year = Integer.parseInt(ym[0]);
+                //月份
+                Integer month = Integer.parseInt(ym[1]);
+                //在统计表中查找
+                MonthAttendQueryObject queryObject = new MonthAttendQueryObject();
+                queryObject.setYear(year);
+                queryObject.setMonth(month);
+                queryObject.setEid(eid);
+                List<Monthattend> m = monthAttendService.queryForPage(queryObject).getRows();
+
+                Employee e = employeeService.selectByPrimaryKey(eid);
+                Integer monthAttendCount = attendanceService.countMonthAttend(eid, year, month, null);
+                Integer monthLateCount = attendanceService.countMonthAttend(eid, year, month, Short.parseShort("1"));
+                Integer monthLeaveEarlyCount = attendanceService.countMonthAttend(eid, year, month, Short.parseShort("2"));
+                Monthattend monthattend = new Monthattend(null, e, sdf.parse(s), monthAttendCount, monthLateCount, monthLeaveEarlyCount);
+                //不存在则添加
+                if (m == null || m.size() == 0) {
+                    monthAttendService.insert(monthattend);
+                } else {
+                    //存在则更新
+                    monthAttendService.updateByPrimaryKey(monthattend);
+                }
+            }
+        }
     }
 
     @ResponseBody
@@ -170,5 +221,21 @@ public class MonthAttendController {
         return new ResponseEntity<byte[]>(tmp,headers, HttpStatus.OK);
     }
 
-
+    @ResponseBody
+    @RequestMapping("/monthAttend_send")
+    public AjaxResult send(MultipartFile file, HttpServletRequest request){
+        AjaxResult result = null;
+        //上传到服务器
+        String filePath = UploadUtils.mulipartFileUpload(file, request);
+        //获取真实地址
+        filePath = request.getSession().getServletContext().getRealPath(filePath);
+        try {
+            String[] emails = employeeService.getFEEmails();
+            MailUtil.sendEmail(emails, filePath, "考勤", "考勤汇总", "text/html;charset=utf-8");
+            result = new AjaxResult(true,"发送成功！");
+        }catch (Exception e){
+            result = new AjaxResult("发送失败，请联系管理员！");
+        }
+        return result;
+    }
 }

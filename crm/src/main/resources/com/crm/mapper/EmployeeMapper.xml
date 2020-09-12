@@ -18,6 +18,12 @@
     </association>
   </resultMap>
 
+  <!-- String[] getFEEmails(); -->
+  <select id="getFEEmails" resultType="java.lang.String">
+    select email from employee where id in (select e_id from emp_role where r_id in
+        (select id from role where name = '财务部人员'))
+  </select>
+
   <!-- Employee selectByUsername(String username); -->
   <select id="selectByUsername" resultMap="BaseResultMap">
     select * from employee where username = #{username};

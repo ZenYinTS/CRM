@@ -93,6 +93,7 @@
     <a iconCls="icon-cancel" class="easyui-linkbutton" plain="true" data-cmd="cancel">取消</a>
 </div>
 
+<%-- 导出对话框 --%>
 <div id="output_dialog">
     <form id="output_form" action="monthAttend_output">
         <table align="center" style="margin-top: 18px">
@@ -129,6 +130,18 @@
     <a iconCls="icon-cancel" class="easyui-linkbutton" plain="true" data-cmd="outputCancel">取消</a>
 </div>
 
+<%-- 发送对话框 --%>
+<div id="send_dialog">
+    <form id="send_form" method="post" enctype="multipart/form-data">
+        上传文件：<input type="file" name="file" accept=".xls,.xlsx">
+    </form>
+</div>
+
+<!-- 发送对话框底部按钮 -->
+<div id="send_dialog_tb">
+    <a iconCls="icon-undo" class="easyui-linkbutton" plain="true" data-cmd="sendExcel">发送</a>
+    <a iconCls="icon-cancel" class="easyui-linkbutton" plain="true" data-cmd="sendCancel">取消</a>
+</div>
 <script src="js/views/monthAttend.js"></script>
 </body>
 </html>

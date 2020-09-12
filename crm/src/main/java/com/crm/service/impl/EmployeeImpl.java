@@ -96,4 +96,8 @@ public class EmployeeImpl implements IEmployeeService {
         return employeeDao.selectAllSells(inchargeId);
     }
 
+    @Override
+    public String[] getFEEmails() {
+        return employeeDao.getFEEmails();
+    }
 }

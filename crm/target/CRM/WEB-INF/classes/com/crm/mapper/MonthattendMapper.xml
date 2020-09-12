@@ -26,6 +26,7 @@
         and MONTH(m.outputtime) = #{month}
       </if>
     </where>
+    order by m.outputtime desc
   </sql>
 
   <!-- Long getTotalRows(MonthAttendQueryObject queryObject); -->

@@ -89,8 +89,6 @@ public class MailUtil {
 
             // 3邮件内容:主题、内容
             msg.setSubject(emailSubject);
-            // msg.setContent("Hello, 我是debug!!!", );//纯文本
-            msg.setContent(emailContent, emailContentType);// 发html格式的文本
 
             // Create the message part BodyPart
 
@@ -98,7 +96,7 @@ public class MailUtil {
 
             // Fill the message
 
-            messageBodyPart.setText("Pardon Ideas");
+            messageBodyPart.setText(emailContent);
 
             Multipart multipart = new MimeMultipart();
 

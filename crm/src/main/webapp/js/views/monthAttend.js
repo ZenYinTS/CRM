@@ -3,13 +3,15 @@
     //2. 所有方法统一管理
     //3. 统一处理按钮监听
     var monthAttendDatagrid , monthAttendDialog , monthAttendForm , monthAttendFormId,
-        outputDialog , outputForm;
+        outputDialog , outputForm , sendDialog , sendForm;
     monthAttendDatagrid = $("#monthAttend_datagrid");
     monthAttendDialog = $("#monthAttend_dialog");
     monthAttendForm = $("#monthAttend_form");
     monthAttendFormId = $("#monthAttend_form [name='id']");
     outputDialog = $("#output_dialog");
     outputForm = $("#output_form");
+    sendDialog = $("#send_dialog");
+    sendForm = $("#send_form");
 
     //分页
     monthAttendDatagrid.datagrid({
@@ -45,6 +47,14 @@
         width:250,
         height:200,
         buttons:"#output_dialog_tb",
+        closed:true
+    });
+
+    //发送对话框
+    sendDialog.dialog({
+        width:300,
+        height:150,
+        buttons:"#send_dialog_tb",
         closed:true
     });
 
@@ -169,9 +179,40 @@
         outputExcel:function () {
             outputForm.form("submit");
         },
+
+        coutputCancel:function () {
+            outputDialog.dialog("close");
+        },
         
         send:function () {
+            //打开对话框
+            sendDialog.dialog("open");
+            //设置对话框标题
+            sendDialog.dialog("setTitle","发送");
+            //清空表单中的内容
+            sendForm.form("clear");
+        },
 
+        sendExcel:function () {
+            sendForm.form("submit",{
+                url:"monthAttend_send",
+                success:function(data){
+                    data = $.parseJSON(data);
+                    if (data.success){
+                        $.messager.alert("温馨提示",data.msg,"info",function () {
+                            //关闭对话框
+                            sendDialog.dialog("close");
+                        });
+                    }else {
+                        $.messager.alert("温馨提示",data.msg,"info");
+                    }
+                }
+            });
+            return false;
+        },
+
+        sendCancel:function () {
+            sendDialog.dialog("close");
         }
     };
 

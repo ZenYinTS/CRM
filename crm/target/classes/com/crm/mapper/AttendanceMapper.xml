@@ -25,6 +25,35 @@
 
     </where>
   </sql>
+    <!-- Integer countMonthAttend(Long eid, Integer year, Integer month, Short status); -->
+    <select id="countMonthAttend" resultType="java.lang.Integer">
+      select COUNT(*) from attendance
+      <where>
+        <if test="eid !=null">
+          emp_id = #{eid}
+        </if>
+        <if test="year !=null">
+          and YEAR(signinTime) = #{year}
+        </if>
+        <if test="month !=null">
+          and MONTH(signinTime) = #{month}
+        </if>
+        <if test="status !=null">
+          and status = #{status}
+        </if>
+      </where>
+
+    </select>
+
+    <!-- List<Attendance> queryByEid(Long eid); -->
+    <select id="queryByEid" resultMap="BaseResultMap">
+        select * from attendance where emp_id = #{eid}
+    </select>
+
+  <!-- Long[] queryForEmpId(); -->
+  <select id="queryForEmpId" resultType="java.lang.Long">
+    SELECT DISTINCT emp_id FROM attendance
+  </select>
 
   <!-- Long getTotalRows(AttendanceQueryObject queryObject); -->
   <select id="getTotalRows" resultType="java.lang.Long">

@@ -39,3 +39,7 @@ function searchBtn() {
         month: month
     })
 }
+
+function submit() {
+    $("#salaryForm").form("submit");
+}
