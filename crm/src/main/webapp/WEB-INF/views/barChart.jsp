@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>潜在客户新增报表</title>
+    <title>${title}</title>
     <%@include file="common.jsp" %>
 </head>
 <body style="background: white;text-align: center">

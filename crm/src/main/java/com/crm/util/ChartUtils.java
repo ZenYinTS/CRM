@@ -112,7 +112,7 @@ public class ChartUtils {
     }
 
 
-    public static GsonOption getLineJsonOption(String title,String type,int[] values,String[] xLabels) {
+    public static GsonOption getLineJsonOption(String title,String type,Float[] values,String[] xLabels) {
         //        Line
 //        String[] types = {"邮件营销", "联盟广告", "视频广告"};
 //        int[][] datas = {{120, 132, 101, 134, 90, 230, 210}, {220, 182, 191, 234, 290, 330, 310}, {150, 232, 201, 154, 190, 330, 410}};

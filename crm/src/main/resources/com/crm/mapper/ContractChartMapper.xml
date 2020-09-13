@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.ContractChartMapper">
+    <resultMap id="BaseResultMap" type="com.crm.domain.ContractChart">
+        <result column="groupInfo" property="groupInfo"/>
+        <result column="status" property="status"/>
+        <result column="paytime" property="paytime"/>
+        <result column="money" property="money"/>
+    </resultMap>
+
+    <sql id="where_sql">
+        <where>
+            c.status = 1
+            <if test="startTime!=null">
+                AND c.paytime >= #{startTime}
+            </if>
+            <if test="endTime!=null">
+                AND c.paytime &lt;= #{endTime}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="groupColumn">
+        <if test="groupInfo == 'year'">
+            YEAR(c.paytime) as groupInfo
+        </if>
+        <if test="groupInfo == 'quarter'">
+            CONCAT(YEAR(c.paytime),'- 第',QUARTER(c.paytime),'季度') as groupInfo
+        </if>
+        <if test="groupInfo == 'month'">
+            CONCAT(YEAR(c.paytime),'-',MONTH(c.paytime)) as groupInfo
+        </if>
+    </sql>
+
+    <sql id="groupCondition">
+        <if test="groupInfo == 'year'">
+            group by YEAR(c.paytime)
+        </if>
+        <if test="groupInfo == 'quarter'">
+            group by YEAR(c.paytime),QUARTER(c.paytime)
+        </if>
+        <if test="groupInfo == 'month'">
+            group by YEAR(c.paytime),MONTH(c.paytime)
+        </if>
+    </sql>
+
+    <!--  Long getTotalRows(ContractChartQueryObject queryObject);  -->
+    <select id="getTotalRows" resultType="java.lang.Long">
+        select COUNT(*) from contract c
+        <include refid="where_sql"></include>
+    </select>
+
+    <!--  List<CustomerChart> queryForPage(ContractChartQueryObject queryObject);  -->
+    <select id="queryForPage" resultMap="BaseResultMap">
+        select <include refid="groupColumn"/>,sum(c.money) as money,c.paytime as paytime
+         from contract c
+        <include refid="where_sql"></include>
+        <include refid="groupCondition"></include>
+        <if test="page!=null">
+            limit #{start},#{rows}
+        </if>
+    </select>
+
+</mapper>
