@@ -89,13 +89,19 @@ public class CustomerController {
     }
     @ResponseBody
     @RequestMapping("/customer_save")
-    public AjaxResult save(Customer customer){
+    public AjaxResult save(String type,Customer customer){
         AjaxResult result = null;
         //对没有出现在对话框的字段进行赋值
         customer.setInchargeuser((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION));
         customer.setInputuser((Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION));
-        customer.setStatus(0);
-        customer.setInputtime(new Date());
+        Date date = new Date();
+        if ("potential".equals(type))
+            customer.setStatus(0);
+        if ("formal".equals(type)) {
+            customer.setStatus(1);
+            customer.setFormaltime(date);
+        }
+        customer.setInputtime(date);
         try{
             customerService.insert(customer);
             result =  new AjaxResult(true,"添加成功！");

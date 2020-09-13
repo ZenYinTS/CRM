@@ -55,8 +55,6 @@
                 customerFailed.linkbutton("enable");
             }else {
                 customerFailed.linkbutton("disable");
-
-
             }
         }
     });
@@ -108,7 +106,7 @@
             if (idVal){
                 url = "customer_update";
             }else {
-                url="customer_save";
+                url="customer_save?type="+type;
             }
             //发送异步请求
             customerForm.form("submit",{

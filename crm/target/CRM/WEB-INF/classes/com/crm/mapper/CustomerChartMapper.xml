@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.CustomerChartMapper">
+    <resultMap id="BaseResultMap" type="com.crm.domain.CustomerChart">
+        <result column="groupInfo" property="groupInfo"/>
+        <result column="customerCount" property="customerCount"/>
+        <result column="inputtime" property="inputtime"/>
+        <association property="emp" javaType="com.crm.domain.Employee" columnPrefix="e_">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="realname" property="realname"/>
+        </association>
+    </resultMap>
+
+    <sql id="where_sql">
+        <where>
+            <if test="keyWord!=null and keyWord.length()!=0">
+                and ((e.username like concat('%',#{keyWord},'%')) or (e.realname like concat('%',#{keyWord},'%')))
+            </if>
+            <if test="startTime!=null">
+                AND c.inputtime >= #{startTime}
+            </if>
+            <if test="endTime!=null">
+                AND c.inputtime &lt;= #{endTime}
+            </if>
+            <if test="type == 'potential'">
+                AND c.status =false
+            </if>
+            <if test="type == 'formal'">
+                AND c.status =true
+            </if>
+            <if test="userId != null">
+                AND c.inChargeUser_id = #{userId}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="groupColumn">
+        <if test="groupInfo == 'year'">
+            YEAR(c.inputtime) as groupInfo
+        </if>
+        <if test="groupInfo == 'quarter'">
+            CONCAT(YEAR(c.inputtime),'- 第',QUARTER(c.inputtime),'季度') as groupInfo
+        </if>
+        <if test="groupInfo == 'month'">
+            CONCAT(YEAR(c.inputtime),'-',MONTH(c.inputtime)) as groupInfo
+        </if>
+    </sql>
+
+    <sql id="groupCondition">
+        <if test="groupInfo == 'year'">
+            group by YEAR(c.inputtime)
+        </if>
+        <if test="groupInfo == 'quarter'">
+            group by YEAR(c.inputtime),QUARTER(c.inputtime)
+        </if>
+        <if test="groupInfo == 'month'">
+            group by YEAR(c.inputtime),MONTH(c.inputtime)
+        </if>
+    </sql>
+
+    <!--  Long getTotalRows(CustomerChartQueryObject queryObject);  -->
+    <select id="getTotalRows" resultType="java.lang.Long">
+        select COUNT(*) from customer c left join employee e on c.inchargeUser_id = e.id
+        <include refid="where_sql"></include>
+    </select>
+
+    <!--  List<CustomerChart> queryForPage(CustomerChartQueryObject queryObject);  -->
+    <select id="queryForPage" resultMap="BaseResultMap">
+        select <include refid="groupColumn"/>,count(c.id) as customerCount,c.id,c.inputtime as inputtime,
+         e.id as e_id,e.username as e_username,e.realname as e_realname
+         from customer c left join employee e on c.inchargeUser_id = e.id
+        <include refid="where_sql"></include>
+        <include refid="groupCondition"></include>,c.inChargeUser_id
+        <if test="page!=null">
+            limit #{start},#{rows}
+        </if>
+    </select>
+
+</mapper>
