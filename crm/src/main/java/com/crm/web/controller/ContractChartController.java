@@ -43,6 +43,8 @@ public class ContractChartController {
         queryObject.setGroupInfo(groupInfo);
 
         List<ContractChart> rows = contractChartService.queryForPage(queryObject).getRows();
+        if (rows == null || rows.size()==0)
+            return "norecord";
         //获取分组信息和值
         String[] xLabels = new String[rows.size()];
         Float[] values = new Float[rows.size()];

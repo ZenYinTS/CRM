@@ -12,7 +12,9 @@ import com.github.abel533.echarts.series.Line;
 import com.github.abel533.echarts.style.ItemStyle;
 import com.github.abel533.echarts.style.itemstyle.Normal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChartUtils {
@@ -26,14 +28,6 @@ public class ChartUtils {
         GsonOption option = new GsonOption();
 
         option.title(title); // 标题
-        // 工具栏
-        option.toolbox().show(true).feature(Tool.mark, // 辅助线
-                Tool.dataView, // 数据视图
-                new MagicType(Magic.line, Magic.bar),// 线图、柱状图切换
-                Tool.restore,// 还原
-                Tool.saveAsImage);// 保存为图片
-
-        option.tooltip().show(true).formatter("{a} <br/>{b} : {c}");//显示工具提示,设置提示格式
 
         option.legend(legend);// 图例
 
@@ -63,7 +57,7 @@ public class ChartUtils {
         return option;
     }
 
-    public static GsonOption getBarComplexJsonOption(String title,String legend, String[] xLabels, int[][] values) {
+    public static GsonOption getBarJsonOption(String title,String[] legend, String[] xLabels, Long[][] values) {
         //Bar
 //        String[] xLabels = {"广州", "深圳", "珠海", "汕头", "韶关", "佛山"};
 //        int[] values = {6030, 7800, 5200, 3444, 2666, 5708};
@@ -72,45 +66,31 @@ public class ChartUtils {
         GsonOption option = new GsonOption();
 
         option.title(title); // 标题
-        // 工具栏
-        option.toolbox().show(true).feature(Tool.mark, // 辅助线
-                Tool.dataView, // 数据视图
-                new MagicType(Magic.line, Magic.bar),// 线图、柱状图切换
-                Tool.restore,// 还原
-                Tool.saveAsImage);// 保存为图片
+        option.tooltip();
+        option.legend();// 图例
 
-        option.tooltip().show(true).formatter("{a} <br/>{b} : {c}");//显示工具提示,设置提示格式
-
-        option.legend(legend);// 图例
-
-        Bar bar = new Bar(legend);// 图类别(柱状图)
-        CategoryAxis category = new CategoryAxis();// 轴分类
-        category.data(xLabels);// 轴数据类别
-        // 循环数据
-        for (int i = 0; i < xLabels.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                int data = values[i][j];
-                String color = "rgb(186,73,46)";
+        Bar[]bars = new Bar[values.length];
+        CategoryAxis category = new CategoryAxis();
+        category.data(xLabels);
+        for (int i = 0; i < values.length; i++) {
+            Long[] value = values[i];
+            List<Map<String,Object>> valuesList = new ArrayList<>();
+            for (int j = 0; j < value.length; j++) {
                 // 类目对应的柱状图
-                Map<String, Object> map = new HashMap<String, Object>(2);
-                map.put("value", data);
-                map.put("itemStyle", new ItemStyle().normal(new Normal().color(color)));
-                bar.data(map);
+                Map<String, Object> map = new HashMap<>();
+                map.put("value", value[j]);
+                valuesList.add(map);
             }
-        }
-        boolean isHorizontal = true;
-        if (isHorizontal) {// 横轴为类别、纵轴为值
-            option.xAxis(category);// x轴
-            option.yAxis(new ValueAxis());// y轴
-        } else {// 横轴为值、纵轴为类别
-            option.xAxis(new ValueAxis());// x轴
-            option.yAxis(category);// y轴
+            bars[i] = new Bar(legend[i]);
+            bars[i].setData(valuesList);
         }
 
-        option.series(bar);
+        option.series(bars);
+        option.xAxis(category);// x轴
+        option.yAxis(new ValueAxis());// y轴
+
         return option;
     }
-
 
     public static GsonOption getLineJsonOption(String title,String type,Float[] values,String[] xLabels) {
         //        Line

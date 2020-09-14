@@ -29,7 +29,10 @@
             <if test="type == 'formal'">
                 AND c.status =true
             </if>
-            <if test="userId != null">
+            <if test="userId != null and sn == 'SE'">
+                AND r.sn IN ('SE','market') AND e.dept_id = (SELECT dept_id FROM employee WHERE id = 18)
+            </if>
+            <if test="userId != null and sn == ''">
                 AND c.inChargeUser_id = #{userId}
             </if>
         </where>
@@ -62,6 +65,10 @@
     <!--  Long getTotalRows(CustomerChartQueryObject queryObject);  -->
     <select id="getTotalRows" resultType="java.lang.Long">
         select COUNT(*) from customer c left join employee e on c.inchargeUser_id = e.id
+        <if test="userId != null and sn == 'SE'">
+            LEFT JOIN emp_role er ON e.id = er.e_id
+            LEFT JOIN role r ON r.id = er.r_id
+        </if>
         <include refid="where_sql"></include>
     </select>
 
@@ -70,6 +77,10 @@
         select <include refid="groupColumn"/>,count(c.id) as customerCount,c.id,c.inputtime as inputtime,
          e.id as e_id,e.username as e_username,e.realname as e_realname
          from customer c left join employee e on c.inchargeUser_id = e.id
+        <if test="userId != null and sn == 'SE'">
+            LEFT JOIN emp_role er ON e.id = er.e_id
+            LEFT JOIN role r ON r.id = er.r_id
+        </if>
         <include refid="where_sql"></include>
         <include refid="groupCondition"></include>,c.inChargeUser_id
         <if test="page!=null">

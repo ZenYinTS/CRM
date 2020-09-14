@@ -62,8 +62,9 @@
             //获得窗口的垂直位置
             var iTop = (window.screen.availHeight - 30 - 400) / 2;
             //获得窗口的水平位置
-            var iLeft = (window.screen.availWidth - 10 - 600) / 2;
-            window.open("display_chart?groupInfo="+groupInfo.combobox("getValue")+"&type="+type.val(), '_blank','width=600px,height=400px,top=' + iTop + ',left=' + iLeft );
+            var iLeft = (window.screen.availWidth - 10 - 1000) / 2;
+
+            window.open("display_chart?type="+type.val() , '_blank','width=1000px,height=400px,top=' + iTop + ',left=' + iLeft );
         }
     };
 });

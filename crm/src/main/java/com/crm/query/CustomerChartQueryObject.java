@@ -21,4 +21,6 @@ public class CustomerChartQueryObject extends QueryObject {
     private Date endTime;
 
     private String type;
+
+    private String sn;
 }
