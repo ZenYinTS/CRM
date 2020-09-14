@@ -91,7 +91,7 @@
             <tr>
                 <td>客户性别</td>
                 <td>
-                    <select class="easyui-combobox" name="gender" style="width:100px;" data-options="panelHeight:'auto',editable:false,
+                    <select id="gender" class="easyui-combobox" name="gender" style="width:100px;" data-options="panelHeight:'auto',editable:false,
                     onLoadSuccess:function () {
                         $(this).combobox('clear');
                     }">
@@ -119,7 +119,7 @@
             <tr>
                 <td>职业</td>
                 <td>
-                    <input type="text" class="easyui-combobox" name="job.id" data-options="
+                    <input id="job" type="text" class="easyui-combobox" name="job.id" data-options="
                     valueField: 'id',
                     textField: 'name',
                     url:'job_queryInDetail',
@@ -130,7 +130,7 @@
             <tr>
                 <td>收入水平</td>
                 <td>
-                    <input type="text" class="easyui-combobox" name="salarylevel.id" data-options="
+                    <input id="salary" type="text" class="easyui-combobox" name="salarylevel.id" data-options="
                     valueField: 'id',
                     textField: 'name',
                     url:'salarylevel_queryInDetail',
@@ -141,7 +141,7 @@
             <tr>
                 <td>客户来源</td>
                 <td>
-                    <input type="text" class="easyui-combobox" name="customersource.id" data-options="
+                    <input id="source" type="text" class="easyui-combobox" name="customersource.id" data-options="
                     valueField: 'id',
                     textField: 'name',
                     url:'customersource_queryInDetail',

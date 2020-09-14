@@ -166,6 +166,7 @@
                 roleDialog.dialog("setTitle","编辑");
                 //清空表单中的内容
                 $("[name='id'],[name='sn'],[name='name']").val("");
+                selfPermission.datagrid("loadData",{rows:[]});
                 //对话框传入选中的数据
                 //特殊属性处理，请求中传入当前角色的id
                 var options = selfPermission.datagrid("options");

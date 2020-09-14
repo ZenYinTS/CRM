@@ -90,6 +90,7 @@
                 url:"queryForSignInfo",
                 type:"POST",
                 success:function (data) {
+                    console.log(data);
                     data["emp.username"] = data.emp.username;
                     data["signouttime"] = formatDate(new Date(),"yyyy-MM-dd HH:mm:ss");
                     attendanceForm.form("load",data);

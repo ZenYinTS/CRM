@@ -33,10 +33,12 @@
 
 <!-- 签到/签退对话框 -->
 <div id="attendance_dialog">
-    <input type="hidden" id="username" value="<%= ((Employee)UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getUsername()%>">
+    <input type="hidden" id="username"
+           value="<%= ((Employee)UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getUsername()%>">
     <form id="attendance_form" method="post">
         <%--  隐含域，判断签到还是签退 --%>
         <input type="hidden" name="id">
+        <input type="hidden" name="status">
         <table align="center" style="margin-top: 18px">
             <tr>
                 <td>姓名</td>

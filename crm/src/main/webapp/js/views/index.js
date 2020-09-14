@@ -1,5 +1,5 @@
 $(function () {
-    $(".easyui-tree").tree({
+    $("#menu").tree({
         url:"queryForMenu",
         onClick:function(node){
             addTab(node);

@@ -7,7 +7,7 @@
     <result column="state" jdbcType="VARCHAR" property="state" />
     <result column="checked" jdbcType="BIT" property="checked" />
     <result column="attributes" jdbcType="VARCHAR" property="attributes" />
-    <result column="iconCls" jdbcType="VARCHAR" property="iconcls" />
+    <result column="iconCls" jdbcType="VARCHAR" property="iconCls" />
     <result column="function" jdbcType="VARCHAR" property="function"/>
     <!-- 先查询到所有的父节点，查询到的父节点中的子节点根据函数queryByPid来获取，传入queryForRoot函数的id进行查找子节点 -->
     <collection property="children" ofType="com.crm.domain.Menu" column="id" select="com.crm.mapper.MenuMapper.queryByPid"></collection>

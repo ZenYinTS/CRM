@@ -9,10 +9,7 @@ import com.crm.query.MonthAttendQueryObject;
 import com.crm.service.IAttendanceService;
 import com.crm.service.IEmployeeService;
 import com.crm.service.IMonthAttendService;
-import com.crm.util.AjaxResult;
-import com.crm.util.MailUtil;
-import com.crm.util.UploadUtils;
-import com.crm.util.UserContext;
+import com.crm.util.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -101,7 +98,9 @@ public class MonthAttendController {
 
     @ResponseBody
     @RequestMapping("/monthAttend_list")
-    public PageResult queryForPage(MonthAttendQueryObject queryObject){
+    public PageResult queryForPage(MonthAttendQueryObject queryObject,HttpSession session){
+        queryObject.setUserId(((Employee)session.getAttribute(UserContext.USERINSESSION)).getId());
+        queryObject.setIsHR(RoleJudge.isHR());
         return monthAttendService.queryForPage(queryObject);
     }
 

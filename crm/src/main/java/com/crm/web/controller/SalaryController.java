@@ -6,6 +6,7 @@ import com.crm.domain.Salarytable;
 import com.crm.query.SalaryQueryObject;
 import com.crm.service.IEmployeeService;
 import com.crm.service.ISalaryService;
+import com.crm.util.RoleJudge;
 import com.crm.util.UploadUtils;
 import com.crm.util.UserContext;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -39,6 +40,8 @@ public class SalaryController {
     @ResponseBody
     @RequestMapping("/salary_list")
     public PageResult queryForPage(SalaryQueryObject queryObject){
+        queryObject.setUserId(((Employee)UserContext.get().getSession().getAttribute(UserContext.USERINSESSION)).getId());
+        queryObject.setIsHR(RoleJudge.isHR());
         return salaryService.queryForPage(queryObject);
     }
 

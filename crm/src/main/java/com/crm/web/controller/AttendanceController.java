@@ -3,11 +3,13 @@ package com.crm.web.controller;
 import com.crm.domain.Attendance;
 import com.crm.domain.Employee;
 import com.crm.domain.PageResult;
+import com.crm.domain.Role;
 import com.crm.query.AttendanceQueryObject;
 import com.crm.query.QueryObject;
 import com.crm.service.IAttendanceService;
 import com.crm.service.IEmployeeService;
 import com.crm.util.AjaxResult;
+import com.crm.util.RoleJudge;
 import com.crm.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class AttendanceController {
@@ -34,7 +37,9 @@ public class AttendanceController {
 
     @ResponseBody
     @RequestMapping("/attendance_list")
-    public PageResult queryForPage(AttendanceQueryObject queryObject){
+    public PageResult queryForPage(AttendanceQueryObject queryObject,HttpSession session){
+        queryObject.setUserId(((Employee) session.getAttribute(UserContext.USERINSESSION)).getId());
+        queryObject.setIsHR(RoleJudge.isHR());
         return attendanceService.queryForPage(queryObject);
     }
 

@@ -22,7 +22,9 @@
 
   <sql id="where_sql">
     <where>
-
+        <if test="userId != null and isHR==false">
+          a.emp_id = #{userId}
+        </if>
     </where>
   </sql>
     <!-- Integer countMonthAttend(Long eid, Integer year, Integer month, Short status); -->

@@ -8,6 +8,7 @@ import com.crm.query.CustomerChartQueryObject;
 import com.crm.service.ICustomerChartService;
 import com.crm.service.IEmployeeService;
 import com.crm.util.ChartUtils;
+import com.crm.util.RoleJudge;
 import com.crm.util.UserContext;
 import com.github.abel533.echarts.json.GsonOption;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,24 +46,11 @@ public class CustomerChartController {
             queryObject.setGroupInfo("year");
         }
         //设置身份
-        queryObject.setSn(SEorBoss());
+        queryObject.setSn(RoleJudge.SEorBoss());
 
         queryObject.setUserId(((Employee) session.getAttribute(UserContext.USERINSESSION)).getId());
         queryResult =  customerChartService.queryForPage(queryObject);
         return queryResult;
-    }
-
-    private String SEorBoss(){
-        List<Role> roles = (List<Role>) UserContext.get().getSession().getAttribute(UserContext.ROLEINSESSION);
-        for (Role role:roles) {
-            if ("SE".equals(role.getSn())){
-                return "SE";
-            }
-            if ("BOSS".equals(role.getSn())){
-                return "BOSS";
-            }
-        }
-        return "";
     }
 
     @RequestMapping(value = "/display_chart")

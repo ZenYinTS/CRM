@@ -35,7 +35,9 @@
         </c:if>
     </div>
     <div>
-        员工ID：<input type="text" name="eid">
+        <c:if test="${myFn:checkPermission('com.crm.web.controller.MonthAttendController:output')}">
+            员工ID：<input type="text" name="eid">
+        </c:if>
         年份：<select id="sl_year" class="easyui-combobox" name="year" style="width:100px;"
                    data-options="panelHeight:'auto'">
         <option value=''></option>

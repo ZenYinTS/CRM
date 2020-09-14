@@ -9,6 +9,7 @@ import com.crm.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,8 +46,12 @@ public class PermissionImpl implements IPermissionService {
     public PageResult queryForPage(PermissionQueryObject queryObject) {
         //查询总的记录数
         Long total = permissionDao.queryPageCount(queryObject);
-        if (total==0)
-            return new PageResult();
+        if (total==0) {
+            PageResult result = new PageResult();
+            result.setRows(new ArrayList());
+            result.setTotal(0l);
+            return result;
+        }
         //查询总的结果集
         List result = permissionDao.queryPage(queryObject);
         return new PageResult(total,result);

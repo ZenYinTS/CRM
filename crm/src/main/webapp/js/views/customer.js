@@ -4,7 +4,7 @@
     //3. 统一处理按钮监听
     var customerDatagrid , customerFailed , customerDialog , customerForm , customerFormId ,
         customerKeyWord,clearField,inputTime,handOverDialog,cNameInput,inchargeNameInput,
-        inchargeUserInput,handOverForm,customerStatus;
+        inchargeUserInput,handOverForm,customerStatus,emptyField;
     customerDatagrid = $("#customer_datagrid");
     customerFailed = $("[iconCls='icon-edit'],[iconCls='icon-remove'],[iconCls='icon-tip'],[iconCls='icon-cancel'],#formalBtn");
     customerDialog = $("#customer_dialog");
@@ -12,7 +12,8 @@
     customerFormId = $("#customer_form [name='id']");
     customerKeyWord = $("[name='keyWord']");
     customerStatus = $("#sl_status");
-    clearField = $("[name='name'],[name='age'],[name='gender'],[name='tel'],[name='email'],[name='qq'],[name='wechat'],[name='job.id'],[name='salarylevel.id'],[name='customersource.id']");
+    clearField = $("[name='id'],[name='status'],[name='formaltime'],[name='name'],[name='age'],[name='tel'],[name='email'],[name='qq'],[name='wechat']");
+    emptyField = $("#gender,#job,#salary,#source,#inchargeuserId");
     inputTime = $("[name = 'inputtime']");
     handOverDialog = $("#customer_handOver_dialog");
     cNameInput = $("#cname");
@@ -95,6 +96,7 @@
             customerDialog.dialog("setTitle","新增");
             //清空表单中的内容
             clearField.val("");
+            emptyField.combobox("clear");
         },
 
 
@@ -147,7 +149,7 @@
                 customerDialog.dialog("setTitle","编辑");
                 //清空表单中的内容
                 clearField.val("");
-
+                emptyField.combobox("clear");
 
                 //特殊属性的处理：为rowData添加新字段
                 if (rowData.job)

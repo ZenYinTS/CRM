@@ -5,6 +5,7 @@ import com.crm.query.CustomerQueryObject;
 import com.crm.service.ICustomerService;
 import com.crm.service.ITransferService;
 import com.crm.util.AjaxResult;
+import com.crm.util.RoleJudge;
 import com.crm.util.UserContext;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -74,19 +75,11 @@ public class CustomerController {
         if ("resource".equals(type))
             queryObject.setIsSE(true);
         else
-            queryObject.setIsSE(isSE(e));
+            queryObject.setIsSE("SE".equals(RoleJudge.SEorBoss()));
 
         return customerService.queryForPage(queryObject);
     }
 
-    private Boolean isSE(Employee e){
-        List<Role> userRoles = (List<Role>) UserContext.get().getSession().getAttribute(UserContext.ROLEINSESSION);
-        for (Role r : userRoles) {
-            if ("SE".equals(r.getSn()))
-                return true;
-        }
-        return false;
-    }
     @ResponseBody
     @RequestMapping("/customer_save")
     public AjaxResult save(String type,Customer customer){
@@ -241,7 +234,7 @@ public class CustomerController {
     public List<Customer> listPotentialCustomer(){
         CustomerQueryObject queryObject = new CustomerQueryObject();
         Employee e = (Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION);
-        queryObject.setIsSE(isSE(e));
+        queryObject.setIsSE("SE".equals(RoleJudge.SEorBoss()));
         queryObject.setStatus(0);
         queryObject.setUserId(e.getId());
         queryObject.setPage(null);
@@ -253,7 +246,7 @@ public class CustomerController {
     public List<Customer> listFormalCustomer(){
         CustomerQueryObject queryObject = new CustomerQueryObject();
         Employee e = (Employee) UserContext.get().getSession().getAttribute(UserContext.USERINSESSION);
-        queryObject.setIsSE(isSE(e));
+        queryObject.setIsSE("SE".equals(RoleJudge.SEorBoss()));
         queryObject.setStatus(1);
         queryObject.setUserId(e.getId());
         queryObject.setPage(null);

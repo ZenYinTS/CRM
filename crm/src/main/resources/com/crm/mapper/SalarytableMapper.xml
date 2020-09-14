@@ -15,8 +15,11 @@
 
   <sql id="where_sql">
     <where>
+      <if test="!isHR and userId != null">
+        s.emp_id = #{userId}
+      </if>
       <if test="keyWord!=null and keyWord.length()!=0">
-        (e.username like concat('%',#{keyWord},'%') or e.realname like concat('%',#{keyWord},'%'))
+        and (e.username like concat('%',#{keyWord},'%') or e.realname like concat('%',#{keyWord},'%'))
       </if>
       <if test="year!=null">
         and s.year = #{year}

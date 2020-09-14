@@ -40,7 +40,7 @@
     <!-- 高级查询 -->
     <sql id="where_sql">
         <where>
-            <if test="isSE == false">
+            <if test="isSE == false and userId != null">
                 c.inchargeUser_id = #{userId}
             </if>
             <if test="keyWord!=null and keyWord.length()!=0">

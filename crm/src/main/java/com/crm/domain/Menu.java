@@ -19,7 +19,7 @@ public class Menu {
 
     private List<Menu> children;
 
-    private String iconcls;
+    private String iconCls;
 
     private String function;
 }
